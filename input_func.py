@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def input_xyz():  # Функция возращает данные имитатора в виде массива
     reading = open('IM-2/f_xyz.txt', 'r')
     writing = open('IM-2/f_xyz_.txt', 'w')
@@ -328,7 +329,10 @@ def pnap_prepare_data(frame_track, frame_state1, frame_state2, frame_obs):  # П
         end_index_tr = frame_tr['num_track_bnm'].iloc[0]
 
         print(end_index_tr, 'end of track')
-        return frame_track.iloc[st_index_tr:end_index_tr], frame_state1.iloc[st_index_st:], frame_state2.iloc[st_index_st:], frame_obs
+        return (frame_track.iloc[st_index_tr:end_index_tr],
+                frame_state1.iloc[st_index_st:],
+                frame_state2.iloc[st_index_st:],
+                frame_obs)
 
     else:
         frame_tr = frame_track[frame_track['time'] == t0]
@@ -338,7 +342,10 @@ def pnap_prepare_data(frame_track, frame_state1, frame_state2, frame_obs):  # П
         print("Obs_0.txt was't correct, do not use this data")
         print("TY FOR YR ATTENTION")
         print(end_index_tr, end_index_st, 'end of track and state')
-        return frame_track.iloc[st_index_tr:end_index_tr], frame_state1.iloc[st_index_st:end_index_st], frame_state2.iloc[st_index_st:end_index_st], frame_obs
+        return (frame_track.iloc[st_index_tr:end_index_tr],
+                frame_state1.iloc[st_index_st:end_index_st],
+                frame_state2.iloc[st_index_st:end_index_st],
+                frame_obs)
 
 
 def rinex_prepare_data(frame_track, frame_obs):  # Подготовка данных ППА для обработки
@@ -348,7 +355,7 @@ def rinex_prepare_data(frame_track, frame_obs):  # Подготовка данн
     frame0 = frame0[frame0['decisionFlag'] == 1]
     frame0 = frame0[frame0['time'] != 0.0]
     st_index_tr = frame0['num_track'].iloc[1]
-    #print(st_index_tr,'start index track')
+    # print(st_index_tr,'start index track')
     frame_track = frame_track.iloc[st_index_tr:]
 
     frame_track = frame_track[frame_track['decisionFlag'] <= 1]  # cut data by logic (dflag could be only 0\1)
@@ -380,20 +387,20 @@ def command_input(word: str) -> str:
 
 def blh_input() -> list:
     print('Введите координаты точки\n'+'Широта=')
-    b = input()
+    B = input()
     print('Долгота=')
-    l = input()
+    L = input()
     print('Высота=')
-    h = input()
-    if len(b) == 0 or len(l) == 0 or len(h) == 0:
+    H = input()
+    if len(B) == 0 or len(L) == 0 or len(H) == 0:
         print('Некорретный ввод координат (пустое значение)\n Попробуйте еще раз')
         blh_input()
     try:
-        b = float(b)
-        l = float(l)
-        h = float(h)
+        B = float(B)
+        L = float(L)
+        H = float(H)
     except ValueError:
         print('Только числа\n Попробуйте еще раз')
         blh_input()
-    return b, l, h
+    return B, L, H
 ###

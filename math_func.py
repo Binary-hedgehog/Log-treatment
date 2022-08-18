@@ -21,7 +21,7 @@ svmc2_point =       [55.53907, 38.17202, 128.711, 2843807.334413563, 2235607.831
 onp2_point =        [55.53728, 38.17549, 131.331, 2843802.272020579, 2235882.532438007, 5235569.790714532]
 syr_idlib_point =   [35.9332921390998, 36.63599744144252, 442, 4149193.679766917, 3085509.6923088073, 3722460.350054406]
 syr_hmeimim_point = [35.41371890952971, 35.94863134703012, 48, 4212867.908991824, 3055060.628206721, 3675398.247658029]
-###              ###
+
 
 
 def spline(x0, x1, x2, x3, x4, y0, y1, y2, y3, y4, x):  # ИНТЕРПОЛЯЦИЯ КУБИЧЕСКИМ СПЛАЙНОМ
@@ -41,8 +41,7 @@ def spline(x0, x1, x2, x3, x4, y0, y1, y2, y3, y4, x):  # ИНТЕРПОЛЯЦИ
     k2 = 3 * ((a3 - a2) / h3 - (a2 - a1) / h2)
     k3 = 3 * ((a4 - a3) / h4 - (a3 - a2) / h3)
 
-    c2 = (k2 - k1 * h2 / (2 * h1 + 2 * h2) - k3 * h3 / (2 * h3 + 2 * h4)) / (2 * h2 + 
-                                                                             2 * h3 - h2**2 / (2 * h1 + 2 * h2) - h2 * h3 / (2 * h3 + 2 * h4))
+    c2 = (k2 - k1 * h2 / (2 * h1 + 2 * h2) - k3 * h3 / (2 * h3 + 2 * h4)) / (2 * h2 + 2 * h3 - h2**2 / (2 * h1 + 2 * h2) - h2 * h3 / (2 * h3 + 2 * h4))
     c1 = (k1 - c2 * h2) / (2 * h1 + 2 * h2)
     c3 = (k3 - c2 * h2) / (2 * h3 + 2 * h4)
 
@@ -72,7 +71,7 @@ def N1(B):  # КРИВИЗНА ПЕРВОГО ВЕРТИКАЛА
 
 
 def atan_deg(x):  # ФУНКЦИЯ ВЫВОДА АРКТАНГЕНС В ГРАДУСАХ
-    return atan(x) * 180 /  pi
+    return atan(x) * 180 / pi
 
 
 def xyz_blh(x, y, z):  # Функция преобразования геоцентрических координат в геодезические (иттеративаная)
@@ -86,8 +85,8 @@ def xyz_blh(x, y, z):  # Функция преобразования геоце�
     h3 = q / np.cos(b3) - N1(b3)
     b = b3 * 180 / pi
     h = h3
-    l = np.arctan(y / x) * 180 / pi
-    return b, l, h
+    L = np.arctan(y / x) * 180 / pi
+    return b, L, h
 
 
 def blh_xyz(B, L, H):  # Функция преобразования геодезических координат в геоцентрические
@@ -144,6 +143,7 @@ def oshibka(x, e=2):  # Рассчет ошибки m + 2 (3) сигма
     print(o, '-- ошибка' + a)
     return o
 
+
 def sign(x):  # ОПРЕДЕЛЕНИЕ ЗНАКА ЧИСЛА
     if x > 0:
         return 1
@@ -172,7 +172,7 @@ def kub(a, b, c, d):  # НАХОЖДЕНИЕ КОРНЕЙ УРАВНЕНИЯ 3Й
         elif q < 0:
             t = asinh(abs(r) / sqrt(abs(q)**3)) / 3
             x = -2 * sign(r) * sqrt(abs(q)) * sinh(t) - a_1 / 3
-        #print('odin koren')
+        # print('odin koren')
         # print(x)
         return x
 
@@ -180,7 +180,7 @@ def kub(a, b, c, d):  # НАХОЖДЕНИЕ КОРНЕЙ УРАВНЕНИЯ 3Й
 
         x_1 = -2 * r**(1/3) - a_1 / 3
         x_2 = r**(1/3) - a_1 / 3
-        #print('dva корня')
+        # print('dva корня')
         # print(x_1,x_2)
         return x_1, x_2
 
@@ -189,7 +189,7 @@ def kub(a, b, c, d):  # НАХОЖДЕНИЕ КОРНЕЙ УРАВНЕНИЯ 3Й
         x_1 = -2 * sqrt(q) * cos(t) - a_1 / 3
         x_2 = -2 * sqrt(q) * cos(t + (2 * pi / 3)) - a_1 / 3
         x_3 = -2 * sqrt(q) * cos(t - (2 * pi / 3)) - a_1 / 3
-        #print('три корня')
+        # print('три корня')
         # print(x_1,x_2,x_3)
         return x_1, x_2, x_3
 
@@ -209,9 +209,7 @@ def spline_v3(x0, x1, x2, x3, x4, y0, y1, y2, y3, y4, x):  # Cплайн инт�
     k2 = 3 * ((y3 - y2) / h3 - (y2 - y1) / h2)
     k3 = 3 * ((y4 - y3) / h4 - (y3 - y2) / h3)
 
-    c3 = (k2 - k1 * h2 / (2 * h2 + 2 * h1) - k3 * h3 / (2 * h3 
-                                                        + 2 * h4)) / (2 * h2 + 2 * h3 - h2**2 / ( 2 * h1 + 2 * h2) - h3**2 / (2 * h3 
-                                                                                                                              + 2 * h4))
+    c3 = (k2 - k1 * h2 / (2 * h2 + 2 * h1) - k3 * h3 / (2 * h3  + 2 * h4)) / (2 * h2 + 2 * h3 - h2**2 / ( 2 * h1 + 2 * h2) - h3**2 / (2 * h3  + 2 * h4))
     c2 = (k2 - c3 * h2) / (2 * h2 + 2 * h1)
     c4 = (k3 - c3 * h3) / (2 * h3 + 2 * h4)
 
@@ -234,7 +232,6 @@ def spline_v3(x0, x1, x2, x3, x4, y0, y1, y2, y3, y4, x):  # Cплайн инт�
     elif x < x1:
         y = a1 + b1 * (x - x0) + d1 * (x - x0)**3
     return y
-
 
 
 def koef_glon():  # Коэффициент для ГЛОНАСС СТ
@@ -281,14 +278,14 @@ def approx(vvod, time, time0, F0="0"):  # ФУНКЦИЯ АППРОКСИМАЦ�
         if m == 1:
             continue
 
-        vivod[ii] = spline(time0[a-2], time0[a-1], time0[a], time0[a+1], 
+        vivod[ii] = spline(time0[a-2], time0[a-1], time0[a], time0[a+1],
                            time0[a+2], vvod[a-2], vvod[a-1], vvod[a],
                            vvod[a+1], vvod[a+2], i)
         # print((time0[a-2],time0[a-1],time0[a],time0[a+1],time0[a+2],vvod[a-2],vvod[a-1],vvod[a],vvod[a+1],vvod[a+2],i))
         # print(vivod[ii])
         if F0 != "0":
             vivod[ii] += F0[np.where(time == i)[0]]
-            #print(np.where(time == i)[0])
+            # print(np.where(time == i)[0])
         ii += 1
 
     return vivod
@@ -325,7 +322,7 @@ def approx_linar(vvod, time, time0):  # ФУНКЦИЯ АППРОКСИМАЦИ�
         if m == 1:
             continue
 
-        #vivod[ii] = spline(time0[a-2],time0[a-1],time0[a],time0[a+1],time0[a+2],vvod[a-2],vvod[a-1],vvod[a],vvod[a+1],vvod[a+2],i)
+        # vivod[ii] = spline(time0[a-2],time0[a-1],time0[a],time0[a+1],time0[a+2],vvod[a-2],vvod[a-1],vvod[a],vvod[a+1],vvod[a+2],i)
         vivod[ii] = linar(time0[a], time0[a+1], vvod[a], vvod[a+1], i)
         # print((time0[a-2],time0[a-1],time0[a],time0[a+1],time0[a+2],vvod[a-2],vvod[a-1],vvod[a],vvod[a+1],vvod[a+2],i))
         # print(vivod[ii])
@@ -359,14 +356,9 @@ def psevdorange(sat_range, time, time0, time_track, T0):  # ФУНКЦИЯ АП�
         if m == 1:
             continue
 
-        vivod[ii] = spline(time0[a - 2],time0[a - 1],time0[a],time0[a + 1],
-                           time0[a + 2],
-                            sat_range[a - 2],
-                            sat_range[a - 1],
-                            sat_range[a],
-                            sat_range[a + 1],
-                            sat_range[a + 2],
-                            i)
+        vivod[ii] = spline(time0[a - 2], time0[a - 1], time0[a], time0[a + 1],
+                           time0[a + 2], sat_range[a - 2], sat_range[a - 1],
+                            sat_range[a], sat_range[a + 1], sat_range[a + 2], i)
         vivod[ii] += T0[np.where(time_track == i)[0]]
         ii += 1
 
@@ -381,7 +373,7 @@ def approx3(vvod1, vvod2, vvod3, time, time0):  # ФУНКЦИЯ АППРОКС�
     '''
     # print(vvod)
     # print(vvod[2342])
-    #vivod = np.empty_like(time)
+    # vivod = np.empty_like(time)
     # print(len(time),len(time0),'len')
 
     vivod1 = np.zeros_like(time)
@@ -446,7 +438,7 @@ def approx3(vvod1, vvod2, vvod3, time, time0):  # ФУНКЦИЯ АППРОКС�
             vvod3[a + 1],
             vvod3[a + 2],
             i)
-        #print(vivod[ii]," ",ii)
+        # print(vivod[ii]," ",ii)
         ii += 1
     # print(vivod,len(vivod),"vivod")
     return vivod1, vivod2, vivod3
@@ -563,4 +555,3 @@ def angle_between(x0, y0, z0, x1, y1, z1):  # Угол между двумя т�
 
 def deg_conv(deg_, min_, sec_) -> float:  # Конвертирование градусов в десятичный формат
     return deg_+min_/60+sec_/3600
-

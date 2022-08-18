@@ -56,6 +56,7 @@ def errors_pr_in_file(psevdo_range):  # Функция вывода ошибок
     writing.close()
     return 1
 
+
 def show_diff(x):  # вывод граффика дифференциала параметра
     fig_0 = px.line(x=range(len(x)-1), y=np.diff(x), title='Дифференциал')
     # fig_0.show()

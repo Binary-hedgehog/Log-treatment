@@ -9,7 +9,7 @@ import plotly.express as px
 from plotly.subplots import make_subplots
 from plotly.offline import plot
 
-#import functions as fu
+# import functions as fu
 import math_func as mf
 import output_func as of
 import time_func as tf
@@ -26,9 +26,9 @@ print("end")
 class StartClass(object):
     '''
     Класс ввода и первичной подготовки данных
-    Инициилизируется функцией input с выбором соответсвующего протокола 
+    Инициилизируется функцией input с выбором соответсвующего протокола
     для работы
-    Имеет функции выводящие любые необходимые параметры 
+    Имеет функции выводящие любые необходимые параметры
     '''
 
     def __init__(self):
@@ -45,22 +45,22 @@ class StartClass(object):
 
         self.data_correction = False
         '''
-        обрезает данные по адекватности флага навигации (1/0) - как будто уже и 
+        обрезает данные по адекватности флага навигации (1/0) - как будто уже и
         не сильно нужен...хотя надо бы его проработать
         '''
         self.in_nav_correction = False
         '''
-         обрезает данные по dgop в пределах 
+         обрезает данные по dgop в пределах
         1<=gdop<=10 и по флагу навигации 1
         '''
         # self.kbti_nav = fu.init_array()    # kbti_nav
         # self.kbti_land = fu.init_array()   # kbti_land
-        #self.kbti_etalon_flag = False
+        # self.kbti_etalon_flag = False
 
         df = pd.read_csv('IM-2/f_blh.txt')
         self.im_date = 0
         '''
-        тип данных имитатора им-2, где 0-старый тип сценариев, с радианами и 
+        тип данных имитатора им-2, где 0-старый тип сценариев, с радианами и
         без загаловков, 1 - новый
         '''
         try:
@@ -77,8 +77,8 @@ class StartClass(object):
         self.f_xyz = pd.read_csv('IM-2/f_xyz.txt', sep='\s+', decimal=dec).to_numpy()
         self.f_frg = pd.read_csv('IM-2/frg.txt', sep='\s+', decimal=dec).to_numpy()
         self.f_frn = pd.read_csv('IM-2/frn.txt', sep='\s+', decimal=dec).to_numpy()
-        #self.f_fvg = pd.read_csv('IM-2/f_fvg.txt', sep = '\s+', decimal = dec).to_numpy()
-        #self.f_fvn = pd.read_csv('IM-2/f_fvn.txt', sep = '\s+', decimal = dec).to_numpy()
+        # self.f_fvg = pd.read_csv('IM-2/f_fvg.txt', sep = '\s+', decimal = dec).to_numpy()
+        # self.f_fvn = pd.read_csv('IM-2/f_fvn.txt', sep = '\s+', decimal = dec).to_numpy()
 
     def input(self, proto_type='rinex'):
         # , kbti=False, kbti_etalon_flag = 0, kbti_name = '', kbti_name_land = ''
@@ -136,14 +136,13 @@ class StartClass(object):
             self.ks_gal = self.take_parametr('qtyGalE1InNav')
             self.ks_sbas = self.take_parametr('qtySBASInNav')
 
-
     def sat_search(self, sat_type):
         '''
-        Функция, которая выводит номера спутников и литеры для них 
-        (ГЛОНАСС СТ и ВТ) 
+        Функция, которая выводит номера спутников и литеры для них
+        (ГЛОНАСС СТ и ВТ)
         в виде списка, если они встречаются в сценарии
 
-        Если список пустой, значит такой НС нет в сценарии 
+        Если список пустой, значит такой НС нет в сценарии
         '''
         sats = []
         letter = []
@@ -169,7 +168,7 @@ class StartClass(object):
 
         return sats, letter
 
-      def take_parametr(self, parametr, sat_number='all', sat_type='0', 
+    def take_parametr(self, parametr, sat_number='all', sat_type='0',
                       data_type='low'):
         # Функция возвращает параметр из данных ППА или ПНАП
 
@@ -267,7 +266,7 @@ class StartClass(object):
                 '''
                 frame2 = self.file_state1
                 return mf.approx_linar(
-                    frame2[parametr].to_numpy(), 
+                    frame2[parametr].to_numpy(),
                     self.file_track['time'].to_numpy(),
                     frame2['time'].to_numpy())
 
@@ -298,8 +297,8 @@ class LogClass(StartClass):
     def distance(self, point_name, sl_l=0, sl_r=0, data_corr=False,
                  in_nav_corr=False, xaxe='num'):
         # Функция для вывода графика расстояния от некой точки
-        ''' 
-        Точка на вход подается списком длинной 3 или 6 
+        '''
+        Точка на вход подается списком длинной 3 или 6
         (см.пример в шапке модуля functions)
         '''
         if len(point_name) == 3:
@@ -327,7 +326,7 @@ class LogClass(StartClass):
 
         i_start += sl_l
         i_end -= sl_r
-        #print(i_start, i_end,'I')
+        # print(i_start, i_end,'I')
 
         if xaxe == 'num':
             xaxe = self.take_parametr(self.num)
@@ -336,11 +335,11 @@ class LogClass(StartClass):
             else:
                 xaxe_name = "Номера отсчетов, 1/10с"
         elif xaxe == 'time':
-            #xaxe = fu.sec_to_time(fu.time_remade(self.take_parametr('time').to_numpy()))
+            # xaxe = fu.sec_to_time(fu.time_remade(self.take_parametr('time').to_numpy()))
             xaxe = tf.sec_to_time(self.take_parametr('time').to_numpy())
             xaxe_name = "Время"
         elif xaxe == 'sec':
-            #xaxe = fu.time_remade(self.take_parametr('time').to_numpy())
+            # xaxe = fu.time_remade(self.take_parametr('time').to_numpy())
             xaxe = self.take_parametr('time').to_numpy()
             xaxe_name = "Время, с"
         else:
@@ -356,7 +355,7 @@ class LogClass(StartClass):
         fig0 = make_subplots(
             rows=2, cols=1, shared_xaxes=True,
             vertical_spacing=0.04, subplot_titles=(
-                'Дальность, м', 
+                'Дальность, м',
                 'Флаги навигации, дифф.режима и геометрический фактор'))
 
         fig0.add_trace(
@@ -371,7 +370,7 @@ class LogClass(StartClass):
                 y=dflag[i_start:i_end],
                 name='Флаг навигации'),
             row=2, col=1)
-        fig0.add_trace(      
+        fig0.add_trace(
             go.Scatter(
                 x=xaxe[i_start:i_end],
                 y=gdop[i_start:i_end],
@@ -394,10 +393,10 @@ class LogClass(StartClass):
     def show_graph(self, parametr, num_sat='all', type_sat='0', sl_l=0, sl_r=0,
                    data_corr=False, in_nav_corr=False, xaxe='num'):
         # Функция для вывода графика от некоего параметра
-        ''' 
+        '''
         Список параметров можно взять из шапки подгружаемых файлов
         Для данных первички необходимо указывать параметры num_sat и type_sat
-        Есть предустановленные параметры такие как: координаты, скорости, 
+        Есть предустановленные параметры такие как: координаты, скорости,
         ускорения, рывки (включая данные имитатора) и тд.  (ниже по коду)
         '''
         if parametr == 'diff_time':
@@ -427,18 +426,18 @@ class LogClass(StartClass):
             else:
                 xaxe_name = "Номера отсчетов, 1/10с"
         elif xaxe == 'time':
-            #xaxe = fu.sec_to_time(fu.time_remade(self.take_parametr('time').to_numpy()))
+            # xaxe = fu.sec_to_time(fu.time_remade(self.take_parametr('time').to_numpy()))
             xaxe = tf.sec_to_time(self.take_parametr('time').to_numpy())
             xaxe_name = "Время"
         elif xaxe == 'sec':
-            #xaxe = fu.time_remade(self.take_parametr('time').to_numpy())
+            # xaxe = fu.time_remade(self.take_parametr('time').to_numpy())
             xaxe = self.take_parametr('time').to_numpy()
             xaxe_name = "Время, с"
         else:
             print('incorrect input xaxe')
             return 0
 
-        if parametr in ['coor', 'rate', 'exeler', 'jerk', 
+        if parametr in ['coor', 'rate', 'exeler', 'jerk',
                         'coor0', 'rate0', 'exeler0', 'jerk0']:
             if parametr in ['coor', 'rate', 'exeler', 'jerk']:
                 x = self.take_parametr('userX()').to_numpy()
@@ -447,10 +446,10 @@ class LogClass(StartClass):
                 blh = mf.xyz_blh(x, y, z)
 
                 if parametr == 'coor':
-                    names = ["Координата х, м", "Координата у, м", 
+                    names = ["Координата х, м", "Координата у, м",
                              "Координата z, м",
-                             "Геометрический фактор и флаг навигации", 
-                             "Количество спутников", "Координата b, град.", 
+                             "Геометрический фактор и флаг навигации",
+                             "Количество спутников", "Координата b, град.",
                              "Координата l, град.", "Координата h, м"]
                     title1 = 'Координаты'
 
@@ -458,9 +457,9 @@ class LogClass(StartClass):
                     names = ["Составляющая скорости vх, м/c",
                              "Составляющая скорости vу, м/c",
                              "Составляющая скорости vz, м/c",
-                             "Геометрический фактор и флаг навигации", 
+                             "Геометрический фактор и флаг навигации",
                              "Количество спутников",
-                             "Составляющая скорости vb, м/c", 
+                             "Составляющая скорости vb, м/c",
                              "Составляющая скорости vl, м/c",
                              "Составляющая скорости vh, м/c"]
                     title1 = 'Скорости'
@@ -485,11 +484,11 @@ class LogClass(StartClass):
                     blh = mf.lla2xyz_mas(x, y, z, blh[0], blh[1])
 
                 elif parametr == 'jerk':
-                    names = ["Рывок vх, м/c3", "Рывок vу, м/c3", 
+                    names = ["Рывок vх, м/c3", "Рывок vу, м/c3",
                              "Рывок vz, м/c3",
                              "Геометрический фактор и флаг навигации",
                              "Количество спутников",
-                             "Рывок vb, м/c3", "Рывок vl, м/c3", 
+                             "Рывок vb, м/c3", "Рывок vl, м/c3",
                              "Рывок vh, м/c3"]
                     title1 = 'Рывки'
 
@@ -515,8 +514,8 @@ class LogClass(StartClass):
                     y = self.f_xyz[:, 2]
                     z = self.f_xyz[:, 3]
                     if self.im_date:
-                        blh = [self.f_blh[:, 1], 
-                               self.f_blh[:, 2], 
+                        blh = [self.f_blh[:, 1],
+                               self.f_blh[:, 2],
                                self.f_blh[:, 3]]
                     else:
                         blh = [self.f_blh[:, 1] * 180 / pi,
@@ -798,7 +797,7 @@ class LogClass(StartClass):
                     df = self.file_obs
                     df = df[(df['typeSat'] == self.dict_type[type_sat]) & (df['numSat'] == i)]
                     fig = px.line(
-                        df[i_start:i_end], x=df[i_start:i_end].index, 
+                        df[i_start:i_end], x=df[i_start:i_end].index,
                         y=parametr, labels={'x': 'time', 'y': parametr},
                         title=title1)
                     # fig.show()
@@ -820,7 +819,7 @@ class LogClass(StartClass):
 
         elif parametr in self.file_state1.columns:  # ok
             fig = px.line(
-                self.file_state1[i_start:i_end], x='num_state1_bnm', 
+                self.file_state1[i_start:i_end], x='num_state1_bnm',
                 y=parametr, title='График от ' + str(parametr))
             # fig.show()
             plot(fig)
@@ -841,7 +840,7 @@ class LogClass(StartClass):
     def show_3d_plot(self, sl_l=0, sl_r=0, data_corr=False, in_nav_corr=False,
                      point=True):
         # Функция для вывода графика координат в трехмерной проекции
-        ''' 
+        '''
         '''
         if data_corr:
             self.data_correction = True
@@ -854,7 +853,7 @@ class LogClass(StartClass):
 
         i_start += sl_l
         i_end -= sl_r
-        #print(i_start, i_end,'I')
+        # print(i_start, i_end,'I')
 
         x = self.take_parametr('userX()').to_numpy()[i_start:i_end]
         y = self.take_parametr('userY()').to_numpy()[i_start:i_end]
@@ -882,18 +881,18 @@ class LogClass(StartClass):
         return 1
 
     def difference_by(self, point_val, parametr='coor', get_date=True, sl_l=0,
-                      sl_r=0, by_point=False, in_nav_corr=False, 
-                      data_corr=False, xaxe='num', modificated=1, 
+                      sl_r=0, by_point=False, in_nav_corr=False,
+                      data_corr=False, xaxe='num', modificated=1,
                       show_graphs=True, diff_time=False):
         # Функция для вывода графиков ошибок по неким параметрам
-        ''' 
+        '''
         Параметром могут являться координаты или скорости
-        get_date - флаг возвращения данных в виде списка 
+        get_date - флаг возвращения данных в виде списка
         by_point - построение ошибок от конкретной точки
         point_val - значение конкретной точки (список)
         modificated - множитель для модификации выходных данных
         show_graphs - флаг построения графиков
-        diff_time - флаг вывода графика дельты времени, вместо gdop 
+        diff_time - флаг вывода графика дельты времени, вместо gdop
         '''
         if data_corr:
             self.data_correction = True
@@ -909,7 +908,7 @@ class LogClass(StartClass):
 
         i_start += sl_l
         i_end -= sl_r
-        #print(i_start, i_end,'I')
+        # print(i_start, i_end,'I')
 
         if xaxe == 'num':
             xaxe = self.take_parametr(self.num)
@@ -918,11 +917,11 @@ class LogClass(StartClass):
             else:
                 xaxe_name = "Номера отсчетов, 1/10с"
         elif xaxe == 'time':
-            #xaxe = fu.sec_to_time(fu.time_remade(self.take_parametr('time').to_numpy()))
+            # xaxe = fu.sec_to_time(fu.time_remade(self.take_parametr('time').to_numpy()))
             xaxe = tf.sec_to_time(self.take_parametr('time').to_numpy())
             xaxe_name = "Время"
         elif xaxe == 'sec':
-            #xaxe = fu.time_remade(self.take_parametr('time').to_numpy())
+            # xaxe = fu.time_remade(self.take_parametr('time').to_numpy())
             xaxe = self.take_parametr('time').to_numpy()
             xaxe_name = "Время, с"
         else:
@@ -943,7 +942,7 @@ class LogClass(StartClass):
         if by_point:  # сравнение с точкой
 
             if point_val == 'mat_ozh':
-                #point_val = [0 for point_val in range(len(point_val))]
+                # point_val = [0 for point_val in range(len(point_val))]
                 point_val[0] = mf.mat_ozh(b)
                 point_val[1] = mf.mat_ozh(l)
                 point_val[2] = mf.mat_ozh(h)
@@ -960,8 +959,8 @@ class LogClass(StartClass):
             b0, l0, h0 = mf.approx3(self.f_blh[:, 1], self.f_blh[:, 2],
                                     self.f_blh[:, 3], time, self.f_blh[:, 0])
 
-            #fu.fast_plot(blh[:, 1], 'b0_im-2')
-            #fu.fast_plot(b0, 'b0')
+            # fu.fast_plot(blh[:, 1], 'b0_im-2')
+            # fu.fast_plot(b0, 'b0')
             if b0[0] >= 2 * pi:
                 b_dif = b0 - b
                 l_dif = l0 - l
@@ -1021,7 +1020,7 @@ class LogClass(StartClass):
                 vz_dif = self.take_parametr('userVz').to_numpy()
             else:
                 vx0, vy0, vz0 = mf.approx3(
-                    self.f_xyz[:, 4], self.f_xyz[:, 5], self.f_xyz[:, 6], 
+                    self.f_xyz[:, 4], self.f_xyz[:, 5], self.f_xyz[:, 6],
                     time, self.f_xyz[:, 0])
                 vx_dif = vx0 - self.take_parametr('userVx').to_numpy()
                 vy_dif = vy0 - self.take_parametr('userVy').to_numpy()
@@ -1038,62 +1037,10 @@ class LogClass(StartClass):
 
         if get_date and not show_graphs:
             of.errors_in_file(
-                output[0][i_start:i_end], output[1][i_start:i_end], 
+                output[0][i_start:i_end], output[1][i_start:i_end],
                 output[2][i_start:i_end])
             return output
-        '''
-        if 0: #ибо ну не нужны обычно ошибки по XYZ но ты можешь всегда их вернуть
-            fig = make_subplots(rows=5, cols=1,
-                    shared_xaxes=True,
-                    vertical_spacing=0.04,
-                    subplot_titles=(names[0],names[1],names[2],names[3],names[4]))
-                    
-            fig.add_trace(
-                    go.Scatter(x= xaxe[i_start:i_end], y= output[0], name=''),
-                    row=1, col=1
-                    )   
-            fig.add_trace(
-                    go.Scatter(x= xaxe[i_start:i_end], y= output[1], name=''),
-                    row=2, col=1
-                    )    
-            fig.add_trace(
-                    go.Scatter(x= xaxe[i_start:i_end], y= output[2], name=''),
-                    row=3, col=1
-                    )
-            fig.add_trace(
-                    go.Scatter(x= xaxe[i_start:i_end], y=gdop[i_start:i_end], name="Геометрический фактор"),
-                    row=4, col=1
-                )
-            fig.add_trace(
-                    go.Scatter(x= xaxe[i_start:i_end], y=dflag[i_start:i_end], name="Флаг навигации"),
-                    row=4, col=1
-                )
-            fig.add_trace(
-                    go.Scatter(x= xaxe[i_start:i_end], y=ks_glo[i_start:i_end], name="GLO"),
-                    row=5, col=1
-                )
-            fig.add_trace(
-                    go.Scatter(x= xaxe[i_start:i_end], y=ks_gps[i_start:i_end], name="GPS"),
-                    row=5, col=1
-                )
-            if self.prot == 1:
-                fig.add_trace(
-                    go.Scatter(x= xaxe[i_start:i_end], y=diffmode[i_start:i_end], name="Признак дифф.режима"),
-                    row=4, col=1
-                )   
-            if self.prot == 2:
-                fig.add_trace(
-                        go.Scatter(x= xaxe[i_start:i_end], y=ks_gal[i_start:i_end], name="GAL"),
-                        row=5, col=1
-                    )
-                fig.add_trace(
-                        go.Scatter(x= xaxe[i_start:i_end], y=ks_bdu[i_start:i_end], name="BDU"),
-                        row=5, col=1
-                    )           
-            fig.update_layout(height=900, width=1900, title_text=title1 + " XYZ")
-            fig.update_xaxes(title_text= xaxe_name, row=5, col=1)
-            fig.show() 
-        '''
+        
         if diff_time:
             names[3] = 'Дифференциал времени'
             names[4] = "Геометрический фактор, флаг навигации, Количество спутников"
@@ -1243,7 +1190,7 @@ class LogClass(StartClass):
     def accordance(self, parametr='coor', sys='blh', sl_l=0, sl_r=0,
                    data_corr=False, in_nav_corr=False, xaxe='num'):
         # Функция для вывода графика сопоставлений по координатам/скоростям с графиком ошибок
-        ''' 
+        '''
         '''
         if sys not in ['blh', 'xyz']:
             print('incorrect sys type')
@@ -1264,7 +1211,7 @@ class LogClass(StartClass):
 
         i_start += sl_l
         i_end -= sl_r
-        #print(i_start, i_end,'I')
+        # print(i_start, i_end,'I')
 
         if xaxe == 'num':
             xaxe = self.take_parametr(self.num)
@@ -1273,11 +1220,11 @@ class LogClass(StartClass):
             else:
                 xaxe_name = "Номера отсчетов, 1/10с"
         elif xaxe == 'time':
-            #xaxe = fu.sec_to_time(fu.time_remade(self.take_parametr('time').to_numpy()))
+            # xaxe = fu.sec_to_time(fu.time_remade(self.take_parametr('time').to_numpy()))
             xaxe = tf.sec_to_time(self.take_parametr('time').to_numpy())
             xaxe_name = "Время"
         elif xaxe == 'sec':
-            #xaxe = fu.time_remade(self.take_parametr('time').to_numpy())
+            # xaxe = fu.time_remade(self.take_parametr('time').to_numpy())
             xaxe = self.take_parametr('time').to_numpy()
             xaxe_name = "Время, с"
         else:
@@ -1353,45 +1300,47 @@ class LogClass(StartClass):
 
         fig = make_subplots(
             rows=4, cols=1, shared_xaxes=True, vertical_spacing=0.04,
-            subplot_titles=(names[0]+sys[0]+names[5], 
-                names[2]+sys[0]+names[5], names[3], names[4]))
+            subplot_titles=(
+                names[0]+sys[0]+names[5],
+                names[2] + sys[0] + names[5],
+                names[3], names[4]))
 
         fig.add_trace(
             go.Scatter(
-                x=xaxe[i_start:i_end], 
-                y=parm_1[i_start:i_end], 
+                x=xaxe[i_start:i_end],
+                y=parm_1[i_start:i_end],
                 name=''),
             row=1, col=1)
-        fig.add_trace(go.Scatter(x=xaxe[i_start:i_end], 
+        fig.add_trace(go.Scatter(x=xaxe[i_start:i_end],
                                  y=dif_1[i_start:i_end],
                                  name=''),
                       row=2, col=1)
-        fig.add_trace(go.Scatter(x=xaxe[i_start:i_end], 
-                                 y=gdop[i_start:i_end], 
+        fig.add_trace(go.Scatter(x=xaxe[i_start:i_end],
+                                 y=gdop[i_start:i_end],
                                  name="Геометрический фактор"),
                       row=3, col=1)
-        fig.add_trace(go.Scatter(x=xaxe[i_start:i_end], 
-                                 y=dflag[i_start:i_end], 
+        fig.add_trace(go.Scatter(x=xaxe[i_start:i_end],
+                                 y=dflag[i_start:i_end],
                                  name="Флаг навигации"),
                       row=3, col=1)
-        fig.add_trace(go.Scatter(x=xaxe[i_start:i_end], 
-                                 y=self.ks_glo[i_start:i_end], 
+        fig.add_trace(go.Scatter(x=xaxe[i_start:i_end],
+                                 y=self.ks_glo[i_start:i_end],
                                  name="GLO"),
                       row=4, col=1)
-        fig.add_trace(go.Scatter(x=xaxe[i_start:i_end], 
-                                 y=self.ks_gps[i_start:i_end], 
+        fig.add_trace(go.Scatter(x=xaxe[i_start:i_end],
+                                 y=self.ks_gps[i_start:i_end],
                                  name="GPS"),
                       row=4, col=1)
         if self.prot == 2:
-            fig.add_trace(go.Scatter(x=xaxe[i_start:i_end], 
-                                     y=self.ks_gal[i_start:i_end], 
+            fig.add_trace(go.Scatter(x=xaxe[i_start:i_end],
+                                     y=self.ks_gal[i_start:i_end],
                                      name="GAL"),
                           row=4, col=1)
-            fig.add_trace(go.Scatter(x=xaxe[i_start:i_end], 
-                                     y=self.ks_bdu[i_start:i_end], 
+            fig.add_trace(go.Scatter(x=xaxe[i_start:i_end],
+                                     y=self.ks_bdu[i_start:i_end],
                                      name="BDU"),
                           row=4, col=1)
-        fig.update_layout(height=900, width=1900, 
+        fig.update_layout(height=900, width=1900,
                           title_text="Соответствие" + title1 + sys[0])
         fig.update_xaxes(title_text=xaxe_name, col=1, row=4)
         fig.show()
@@ -1400,44 +1349,44 @@ class LogClass(StartClass):
         fig1 = make_subplots(rows=4, cols=1,
                              shared_xaxes=True,
                              vertical_spacing=0.04,
-                             subplot_titles=(names[0]+sys[1]+names[5], 
-                                             names[2]+sys[1]+names[5], 
+                             subplot_titles=(names[0]+sys[1]+names[5],
+                                             names[2]+sys[1]+names[5],
                                              names[3], names[4]))
 
-        fig1.add_trace(go.Scatter(x=xaxe[i_start:i_end], 
-                                  y=parm_2[i_start:i_end], 
+        fig1.add_trace(go.Scatter(x=xaxe[i_start:i_end],
+                                  y=parm_2[i_start:i_end],
                                   name=''),
                        row=1, col=1)
-        fig1.add_trace(go.Scatter(x=xaxe[i_start:i_end], 
-                                  y=dif_2[i_start:i_end], 
+        fig1.add_trace(go.Scatter(x=xaxe[i_start:i_end],
+                                  y=dif_2[i_start:i_end],
                                   name=''),
                        row=2, col=1)
-        fig1.add_trace(go.Scatter(x=xaxe[i_start:i_end], 
-                                  y=gdop[i_start:i_end], 
+        fig1.add_trace(go.Scatter(x=xaxe[i_start:i_end],
+                                  y=gdop[i_start:i_end],
                                   name="Геометрический фактор"),
                        row=3, col=1)
-        fig1.add_trace(go.Scatter(x=xaxe[i_start:i_end], 
-                                  y=dflag[i_start:i_end], 
+        fig1.add_trace(go.Scatter(x=xaxe[i_start:i_end],
+                                  y=dflag[i_start:i_end],
                                   name="Флаг навигации"),
                        row=3, col=1)
-        fig1.add_trace(go.Scatter(x=xaxe[i_start:i_end], 
-                                  y=self.ks_glo[i_start:i_end], 
+        fig1.add_trace(go.Scatter(x=xaxe[i_start:i_end],
+                                  y=self.ks_glo[i_start:i_end],
                                   name="GLO"),
                        row=4, col=1)
-        fig1.add_trace(go.Scatter(x=xaxe[i_start:i_end], 
-                                  y=self.ks_gps[i_start:i_end], 
+        fig1.add_trace(go.Scatter(x=xaxe[i_start:i_end],
+                                  y=self.ks_gps[i_start:i_end],
                                   name="GPS"),
                        row=4, col=1)
         if self.prot == 2:
-            fig1.add_trace(go.Scatter(x=xaxe[i_start:i_end], 
+            fig1.add_trace(go.Scatter(x=xaxe[i_start:i_end],
                                       y=self.ks_gal[i_start:i_end],
                                       name="GAL"),
                            row=4, col=1)
-            fig1.add_trace(go.Scatter(x=xaxe[i_start:i_end], 
-                                      y=self.ks_bdu[i_start:i_end], 
+            fig1.add_trace(go.Scatter(x=xaxe[i_start:i_end],
+                                      y=self.ks_bdu[i_start:i_end],
                                       name="BDU"),
                            row=4, col=1)
-        fig1.update_layout(height=900, width=1900, 
+        fig1.update_layout(height=900, width=1900,
                            title_text="Соответствие" + title1 + sys[1])
         fig1.update_xaxes(title_text=xaxe_name, col=1, row=4)
         fig1.show()
@@ -1446,57 +1395,57 @@ class LogClass(StartClass):
         fig2 = make_subplots(rows=4, cols=1,
                              shared_xaxes=True,
                              vertical_spacing=0.04,
-                             subplot_titles=(names[0]+sys[2]+names[5], 
-                                             names[2]+sys[2]+names[5], 
+                             subplot_titles=(names[0]+sys[2]+names[5],
+                                             names[2]+sys[2]+names[5],
                                              names[3], names[4]))
 
-        fig2.add_trace(go.Scatter(x=xaxe[i_start:i_end], 
-                                  y=parm_3[i_start:i_end], 
+        fig2.add_trace(go.Scatter(x=xaxe[i_start:i_end],
+                                  y=parm_3[i_start:i_end],
                                   name=''),
                        row=1, col=1)
-        fig2.add_trace(go.Scatter(x=xaxe[i_start:i_end], 
+        fig2.add_trace(go.Scatter(x=xaxe[i_start:i_end],
                                   y=dif_3[i_start:i_end],
                                   name=''),
                        row=2, col=1)
-        fig2.add_trace(go.Scatter(x=xaxe[i_start:i_end], 
-                                  y=gdop[i_start:i_end], 
+        fig2.add_trace(go.Scatter(x=xaxe[i_start:i_end],
+                                  y=gdop[i_start:i_end],
                                   name="Геометрический фактор"),
                        row=3, col=1)
-        fig2.add_trace(go.Scatter(x=xaxe[i_start:i_end], 
-                                  y=dflag[i_start:i_end], 
+        fig2.add_trace(go.Scatter(x=xaxe[i_start:i_end],
+                                  y=dflag[i_start:i_end],
                                   name="Флаг навигации"),
                        row=3, col=1)
-        fig2.add_trace(go.Scatter(x=xaxe[i_start:i_end], 
+        fig2.add_trace(go.Scatter(x=xaxe[i_start:i_end],
                                   y=self.ks_glo[i_start:i_end],
                                   name="GLO"),
                        row=4, col=1)
-        fig2.add_trace(go.Scatter(x=xaxe[i_start:i_end], 
+        fig2.add_trace(go.Scatter(x=xaxe[i_start:i_end],
                                   y=self.ks_gps[i_start:i_end],
                                   name="GPS"),
                        row=4, col=1)
         if self.prot == 2:
-            fig2.add_trace(go.Scatter(x=xaxe[i_start:i_end], 
-                                      y=self.ks_gal[i_start:i_end], 
+            fig2.add_trace(go.Scatter(x=xaxe[i_start:i_end],
+                                      y=self.ks_gal[i_start:i_end],
                                       name="GAL"),
                            row=4, col=1)
-            fig2.add_trace(go.Scatter(x=xaxe[i_start:i_end], 
-                                      y=self.ks_bdu[i_start:i_end], 
+            fig2.add_trace(go.Scatter(x=xaxe[i_start:i_end],
+                                      y=self.ks_bdu[i_start:i_end],
                                       name="BDU"),
                            row=4, col=1)
-        fig2.update_layout(height=900, width=1900, 
+        fig2.update_layout(height=900, width=1900,
                            title_text="Соответствие" + title1 + sys[2])
         fig2.update_xaxes(title_text=xaxe_name, col=1, row=4)
         fig2.show()
         # plot(fig2)
         return 1
 
-    def pvesdo_range(self, graph_show=True, get_date=False, type_sat='glon', 
+    def pvesdo_range(self, graph_show=True, get_date=False, type_sat='glon',
                      sl_l=0, sl_r=0, data_corr=False, in_nav_corr=False):
         # Функция для вывода ошибок по псевдодальностям
-        ''' 
+        '''
         graph_show - флаг построения графика
         get_date - флаг возвращения данных ошибок
-        type_sat - тип СНС 
+        type_sat - тип СНС
         '''
         if data_corr:
             self.data_correction = True
@@ -1548,15 +1497,15 @@ class LogClass(StartClass):
             if n > 4:
                 n = 1
             try:
-                time = tf.time_chek(im_date[:, 0], 
+                time = tf.time_chek(im_date[:, 0],
                                     self.take_parametr(time_name, i, type_sat).to_numpy())
-                sat_range = mf.psevdorange(im_date[:, i], time, im_date[:, 0], 
-                                           tf.time_chek(im_date[:, 0], 
+                sat_range = mf.psevdorange(im_date[:, i], time, im_date[:, 0],
+                                           tf.time_chek(im_date[:, 0],
                                                         self.take_parametr('time')).to_numpy(), T0)
             except AttributeError:
                 time = tf.time_chek(im_date[:, 0], self.take_parametr(time_name, i, type_sat))
                 sat_range = mf.psevdorange(im_date[:, i], time, im_date[:, 0],
-                                           tf.time_chek(im_date[:, 0], 
+                                           tf.time_chek(im_date[:, 0],
                                            self.take_parametr('time')), T0)
 
             pr = self.take_parametr("prL1Sat", i, type_sat) * koef - sat_range
@@ -1564,7 +1513,7 @@ class LogClass(StartClass):
             if n == 1:
                 fig1 = make_subplots(rows=4, cols=1)
 
-            fig1.add_trace(go.Scatter(x=[j for j in range(len(pr[i_start:i_end]))], 
+            fig1.add_trace(go.Scatter(x=[j for j in range(len(pr[i_start:i_end]))],
                                       y=pr[i_start:i_end],
                                       name='Спутник №' + str(i)),
                            row=n, col=1)
@@ -1580,12 +1529,12 @@ class LogClass(StartClass):
             of.errors_pr_in_file(psevdo_range)
             return psevdo_range
 
-    def plot_from_few_parms(self, name1='0', name2='0', name3='0', name4='0', 
+    def plot_from_few_parms(self, name1='0', name2='0', name3='0', name4='0',
                             name5='0', sl_l=0, sl_r=0, data_corr=False,
                             in_nav_corr=False):
         # Функция для вывода графика от нескольких желаемых параметров
-        ''' 
-        Функция не сработает с данными из файло obs(первичка) т.к. там необходимо задавать 
+        '''
+        Функция не сработает с данными из файло obs(первичка) т.к. там необходимо задавать
         тип и номер СНС
         Это пока не предусмотрено
         '''
@@ -1626,27 +1575,27 @@ class LogClass(StartClass):
                             shared_xaxes=True,
                             vertical_spacing=0.04)
 
-        fig.add_trace(go.Scatter(x=num[i_start:i_end], 
-                                 y=parm1[i_start:i_end], 
+        fig.add_trace(go.Scatter(x=num[i_start:i_end],
+                                 y=parm1[i_start:i_end],
                                  name=name1),
                       row=1, col=1)
         if num_graphs > 1:
-            fig.add_trace(go.Scatter(x=num[i_start:i_end], 
-                                     y=parm2[i_start:i_end], 
+            fig.add_trace(go.Scatter(x=num[i_start:i_end],
+                                     y=parm2[i_start:i_end],
                                      name=name2),
                           row=2, col=1)
         if num_graphs > 2:
-            fig.add_trace(go.Scatter(x=num[i_start:i_end], 
-                                     y=parm3[i_start:i_end], 
+            fig.add_trace(go.Scatter(x=num[i_start:i_end],
+                                     y=parm3[i_start:i_end],
                                      name=name3),
                           row=3, col=1)
         if num_graphs > 3:
-            fig.add_trace(go.Scatter(x=num[i_start:i_end], 
-                                     y=parm4[i_start:i_end], 
+            fig.add_trace(go.Scatter(x=num[i_start:i_end],
+                                     y=parm4[i_start:i_end],
                                      name=name4),
                           row=4, col=1)
         if num_graphs == 5:
-            fig.add_trace(go.Scatter(x=num[i_start:i_end], 
+            fig.add_trace(go.Scatter(x=num[i_start:i_end],
                                      y=parm5[i_start:i_end],
                                      name=name5),
                           row=5, col=1)
@@ -1655,12 +1604,12 @@ class LogClass(StartClass):
         # fig.show()
         plot(fig)
 
-    def coor_on_map(self, sl_l=0, sl_r=0, data_corr=False, in_nav_corr=False, 
+    def coor_on_map(self, sl_l=0, sl_r=0, data_corr=False, in_nav_corr=False,
                     with_diff=False):
         # Функция для вывода графика координат на карте мира
-        '''  
-        Формат Карты OSM 
-        with_diff - позволяет добавить маркировку наличия дифференциального режима 
+        '''
+        Формат Карты OSM
+        with_diff - позволяет добавить маркировку наличия дифференциального режима
         во время полета
         '''
         if data_corr:
@@ -1669,7 +1618,7 @@ class LogClass(StartClass):
             self.in_nav_correction = True
 
         gdop = self.take_parametr('gdop')
-        #dflag = self.take_parametr('decisionFlag')
+        # dflag = self.take_parametr('decisionFlag')
 
         x = self.take_parametr('userX()')
         y = self.take_parametr('userY()')
@@ -1687,10 +1636,10 @@ class LogClass(StartClass):
             for i in range(len(diffmode)):
                 if diffmode[i] == 1:
                     sss.append(i)
-            b = blh[0].to_numpy()
-            b = b[sss]
-            l = blh[1].to_numpy()
-            l = l[sss]
+            B = blh[0].to_numpy()
+            B = B[sss]
+            L = blh[1].to_numpy()
+            L = L[sss]
 
         i_start += sl_l
         i_end -= sl_r
@@ -1702,8 +1651,8 @@ class LogClass(StartClass):
                                          marker=go.scattermapbox.Marker(size=8)))
         if with_diff:
             fig.add_trace(go.Scattermapbox(mode="markers+lines",
-                                           lat=b[i_start:i_end],
-                                           lon=l[i_start:i_end],
+                                           lat=B[i_start:i_end],
+                                           lon=L[i_start:i_end],
                                            marker={'size': 10}))
 
         fig.update_layout(margin={'l': 0, 't': 0, 'b': 0, 'r': 0},
@@ -1716,8 +1665,8 @@ class LogClass(StartClass):
 
     def coor_on_map_px(self, sl_l=0, sl_r=0, data_corr=False, in_nav_corr=False):
         # Функция для вывода графика координат на карте мира
-        '''  
-        Формат Карты OSM 
+        '''
+        Формат Карты OSM
         Функция идентична предыдущей, однако реализована на другой функции
         '''
 
@@ -1731,17 +1680,17 @@ class LogClass(StartClass):
             frame1 = frame0[frame0['gdop'] <= 10]
             frame0 = frame1[frame1['gdop'] >= 1]
 
-        frame0['userX()'], frame0['userY()'], frame0['userZ()'] = mf.xyz_blh(frame0['userX()'], 
-                                                                             frame0['userY()'], 
+        frame0['userX()'], frame0['userY()'], frame0['userZ()'] = mf.xyz_blh(frame0['userX()'],
+                                                                             frame0['userY()'],
                                                                              frame0['userZ()'])
         frame0.rename(columns={'userX()': 'lat'}, inplace=True)
         frame0.rename(columns={'userY()': 'lon'}, inplace=True)
         frame0.rename(columns={'userZ()': 'hight'}, inplace=True)
 
-        fig = px.scatter_mapbox(frame0, lat="lat", lon="lon", 
+        fig = px.scatter_mapbox(frame0, lat="lat", lon="lon",
                                 hover_data=["hight", 'num_track'])
         fig.update_traces(mode='markers+lines')
-        fig.update_layout(mapbox_style="stamen-terrain", mapbox_zoom=4, 
+        fig.update_layout(mapbox_style="stamen-terrain", mapbox_zoom=4,
                           mapbox_center_lat=41,
                           margin={"r": 0, "t": 0, "l": 0, "b": 0})
         # fig.show()
@@ -1764,23 +1713,23 @@ class LogClass(StartClass):
                 fig = make_subplots(rows=2, cols=1,
                                     vertical_spacing=0.1,
                                     shared_xaxes=True,
-                                    subplot_titles=('Спутники ГЛОНАСС', 
+                                    subplot_titles=('Спутники ГЛОНАСС',
                                                     'Спутники GPS'))
                 for i in sats_glon:
                     fig.add_trace(go.Scatter(x=[j for j in range(int(len((self.file_obs) / 46)))],
-                                             y=self.take_parametr('snrSat', sat_number=i, 
-                                                                  sat_type='glon', 
+                                             y=self.take_parametr('snrSat', sat_number=i,
+                                                                  sat_type='glon',
                                                                   data_type='full'),
                                              name='№' + str(i)),
                                   row=1, col=1)
                 for i in sats_gps:
                     fig.add_trace(go.Scatter(x=[j for j in range(int(len((self.file_obs) / 46)))],
-                                             y=self.take_parametr('snrSat', sat_number=i, 
-                                                                  sat_type='gps', 
+                                             y=self.take_parametr('snrSat', sat_number=i,
+                                                                  sat_type='gps',
                                                                   data_type='full'),
                                              name='№' + str(i)),
-                                 row=2, col=1)
-                fig.update_layout(height=900, width=1900, 
+                                  row=2, col=1)
+                fig.update_layout(height=900, width=1900,
                                   title_text="СШ спутников")
                 fig.update_xaxes(title_text="Время, с")
                 # fig.show()
@@ -1791,30 +1740,30 @@ class LogClass(StartClass):
                                     subplot_titles=('Спутники ГЛОНАСС'))
                 for i in sats_glon:
                     fig.add_trace(go.Scatter(x=[j for j in range(int(len((self.file_obs) / 46)))],
-                                             y=self.take_parametr('snrSat', sat_number=i, 
-                                                                  sat_type='glon', 
+                                             y=self.take_parametr('snrSat', sat_number=i,
+                                                                  sat_type='glon',
                                                                   data_type='full'),
                                              name='№' + str(i)),
                                   row=1, col=1)
 
-                fig.update_layout(height=900, width=1900, 
+                fig.update_layout(height=900, width=1900,
                                   title_text="СШ спутников")
                 fig.update_xaxes(title_text="Номера отсчетов, 1/с")
                 # fig.show()
                 plot(fig)
 
             elif len(sats_gps) != 0:
-                fig = make_subplots(rows=1, cols=1, 
+                fig = make_subplots(rows=1, cols=1,
                                     subplot_titles=('Спутники GPS'))
                 for i in sats_gps:
                     fig.add_trace(go.Scatter(x=[j for j in range(int(len((self.file_obs) / 46)))],
-                                             y=self.take_parametr('snrSat', sat_number=i, 
-                                                                  sat_type='gps', 
+                                             y=self.take_parametr('snrSat', sat_number=i,
+                                                                  sat_type='gps',
                                                                   data_type='full'),
                                              name='№' + str(i)),
-                                 row=1, col=1)
+                                  row=1, col=1)
 
-                fig.update_layout(height=900, width=1900, 
+                fig.update_layout(height=900, width=1900,
                                   title_text="СШ спутников")
                 fig.update_xaxes(title_text="Номера отсчетов, 1/с")
                 # fig.show()
@@ -1829,21 +1778,21 @@ class LogClass(StartClass):
                 fig = make_subplots(rows=3, cols=1,
                                     vertical_spacing=0.1,
                                     # shared_xaxes=True,
-                                    subplot_titles=('Спутники ГЛОНАСС', 
-                                                    'Спутники GPS', 
+                                    subplot_titles=('Спутники ГЛОНАСС',
+                                                    'Спутники GPS',
                                                     'Спутники BDU, GAL'))
                 for i in sats_glon:
-                    fig.add_trace(go.Scatter(x=self.take_parametr('timeSat', 
-                                                                  sat_number=i, 
+                    fig.add_trace(go.Scatter(x=self.take_parametr('timeSat',
+                                                                  sat_number=i,
                                                                   sat_type='glon'),
-                                             y=self.take_parametr('snrSat', 
-                                                                  sat_number=i, 
+                                             y=self.take_parametr('snrSat',
+                                                                  sat_number=i,
                                                                   sat_type='glon'),
                                              name='№' + str(i)),
                                   row=1, col=1)
                 for i in sats_gps:
-                    fig.add_trace(go.Scatter(x=self.take_parametr('timeSat', 
-                                                                  sat_number=i, 
+                    fig.add_trace(go.Scatter(x=self.take_parametr('timeSat',
+                                                                  sat_number=i,
                                                                   sat_type='gps'),
                                              y=self.take_parametr('snrSat', 
                                                                   sat_number=i, 
@@ -1851,34 +1800,34 @@ class LogClass(StartClass):
                                              name='№' + str(i)),
                                   row=2, col=1)
                 for i in sats_gal:
-                    fig.add_trace(go.Scatter(x=self.take_parametr('timeSat', 
-                                                                  sat_number=i, 
+                    fig.add_trace(go.Scatter(x=self.take_parametr('timeSat',
+                                                                  sat_number=i,
                                                                   sat_type='gal'),
-                                             y=self.take_parametr('snrSat', 
-                                                                  sat_number=i, 
+                                             y=self.take_parametr('snrSat',
+                                                                  sat_number=i,
                                                                   sat_type='gal'),
                                              name='№' + str(i) + ' bdu'),
                                   row=3, col=1)
                 for i in sats_bdu:
-                    fig.add_trace(go.Scatter(x=self.take_parametr('timeSat', 
-                                                                  sat_number=i, 
+                    fig.add_trace(go.Scatter(x=self.take_parametr('timeSat',
+                                                                  sat_number=i,
                                                                   sat_type='bdu'),
-                                             y=self.take_parametr('snrSat', 
-                                                                  sat_number=i, 
+                                             y=self.take_parametr('snrSat',
+                                                                  sat_number=i,
                                                                   sat_type='bdu'),
                                              name='№' + str(i) + ' gal'),
                                   row=3, col=1)
 
-                fig.update_layout(height=900, width=1900, 
+                fig.update_layout(height=900, width=1900,
                                   title_text="СШ спутников")
                 fig.update_xaxes(title_text="Время, с")
                 fig.show()
                 # plot(fig)
 
-    def accordance_of_hight(self, sl_l=0, sl_r=0, data_corr=False, 
+    def accordance_of_hight(self, sl_l=0, sl_r=0, data_corr=False,
                             in_nav_corr=False, xaxe='num'):
         # Функция для вывода графика сопоставлений по координатам/скоростям с графиком ошибок
-        ''' 
+        '''
         '''
         if data_corr:
             self.data_correction = True
@@ -1886,13 +1835,13 @@ class LogClass(StartClass):
             self.in_nav_correction = True
 
         gdop = self.take_parametr('gdop')
-        #dflag = self.take_parametr('decisionFlag')
+        # dflag = self.take_parametr('decisionFlag')
         i_start = 0
         i_end = len(gdop)
 
         i_start += sl_l
         i_end -= sl_r
-        #print(i_start, i_end,'I')
+        # print(i_start, i_end,'I')
 
         if xaxe == 'num':
             xaxe = self.take_parametr(self.num)
@@ -1912,8 +1861,8 @@ class LogClass(StartClass):
 
         dif_full = self.difference_by('coor', show_graphs=False)
 
-        blh = mf.xyz_blh(self.take_parametr('userX()'), 
-                         self.take_parametr('userY()'), 
+        blh = mf.xyz_blh(self.take_parametr('userX()'),
+                         self.take_parametr('userY()'),
                          self.take_parametr('userZ()'))
 
         hight = blh[2]
@@ -1925,15 +1874,15 @@ class LogClass(StartClass):
                             vertical_spacing=0.04,
                             subplot_titles=('Высота, м', 'Ошибка по высоте, м'))
 
-        fig.add_trace(go.Scatter(x=xaxe[i_start:i_end], 
-                                 y=hight[i_start:i_end], 
+        fig.add_trace(go.Scatter(x=xaxe[i_start:i_end],
+                                 y=hight[i_start:i_end],
                                  name=''),
                       row=1, col=1)
-        fig.add_trace(go.Scatter(x=xaxe[i_start:i_end], 
-                                 y=dif_hight[i_start:i_end], 
+        fig.add_trace(go.Scatter(x=xaxe[i_start:i_end],
+                                 y=dif_hight[i_start:i_end],
                                  name=''),
                       row=2, col=1)
-        fig.update_layout(height=900, width=1900, 
+        fig.update_layout(height=900, width=1900,
                           title_text="График соответствия высоты и ошибки по высоте")
         fig.update_xaxes(title_text=xaxe_name, col=1, row=2)
         # fig.show()
