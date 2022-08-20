@@ -2,6 +2,12 @@
 # -*- coding: utf-8 -*-
 from math import pi
 
+'''
+Данный модуль содержит в себе два класса
+1 - для инициализации и загрузки данных
+2 - для обработки и графического отображения
+'''
+
 import numpy as np
 import pandas as pd
 import plotly.graph_objs as go
@@ -9,18 +15,10 @@ import plotly.express as px
 from plotly.subplots import make_subplots
 from plotly.offline import plot
 
-# import functions as fu
 import math_func as mf
 import output_func as of
 import time_func as tf
 import input_func as inf
-
-
-print("Need to do")
-print("Корректное обрезание по фалгу навигации ПНАП")
-print("Добавить везде возможность строить графики (обс) не склеенные")
-print("Протестировать работу всех функций на всех протоколах (кроме КБТИ)")
-print("end")
 
 
 class StartClass(object):
@@ -28,14 +26,14 @@ class StartClass(object):
     Класс ввода и первичной подготовки данных
     Инициилизируется функцией input с выбором соответсвующего протокола
     для работы
-    Имеет функции выводящие любые необходимые параметры
+    Имеет функции возвращающие любые необходимые параметры
     '''
 
     def __init__(self):
 
         self.prot = 0  # Выбор протокола взаимодействия (rinex=1, pnap=2)
         # self.dict2 = fu.init_dict()# obs
-        self.dict_kbti = inf.init_dict()    # kbti
+        #self.dict_kbti = inf.init_dict()    # kbti
         self.dict_type = inf.init_dict()    # sat type
 
         self.file_track = inf.init_array()  # track
@@ -44,25 +42,18 @@ class StartClass(object):
         self.file_state2 = inf.init_array()  # state2
 
         self.data_correction = False
-        '''
-        обрезает данные по адекватности флага навигации (1/0) - как будто уже и
-        не сильно нужен...хотя надо бы его проработать
-        '''
+        # обрезает данные по адекватности флага навигации (1/0) - как будто уже
+        # не сильно нужен...хотя надо бы его проработать
+
         self.in_nav_correction = False
-        '''
-         обрезает данные по dgop в пределах
-        1<=gdop<=10 и по флагу навигации 1
-        '''
-        # self.kbti_nav = fu.init_array()    # kbti_nav
-        # self.kbti_land = fu.init_array()   # kbti_land
-        # self.kbti_etalon_flag = False
+        # обрезает данные по dgop в пределах
+        # 1<=gdop<=10 и по флагу навигации 1
 
         df = pd.read_csv('IM-2/f_blh.txt')
         self.im_date = 0
-        '''
-        тип данных имитатора им-2, где 0-старый тип сценариев, с радианами и
-        без загаловков, 1 - новый
-        '''
+        # флаг типа данных имитатора
+        # где 0-старый тип сценариев, с радианами и без загаловков, 1 - новый
+
         try:
             float(df.columns[0])
         except ValueError:
@@ -81,9 +72,12 @@ class StartClass(object):
         # self.f_fvn = pd.read_csv('IM-2/f_fvn.txt', sep = '\s+', decimal = dec).to_numpy()
 
     def input(self, proto_type='rinex'):
+        '''
+        Функция инициализирующая протокол работы
+        '''
         # , kbti=False, kbti_etalon_flag = 0, kbti_name = '', kbti_name_land = ''
-
-        # kbti_etalon_flag - //без эталона - 0, с эталоном в одном файле - 1, с эталоном в двух файлах - 2\\
+        # kbti_etalon_flag - //без эталона - 0, с эталоном в одном файле - 1, 
+        # с эталоном в двух файлах - 2\\
 
         if proto_type == 'rinex':
             self.prot = 1
@@ -114,7 +108,6 @@ class StartClass(object):
             self.file_state2 = pd.read_csv(
                 'logs/pnap/state2.txt', header=0, sep='\s+')
 
-            # prepare time pnap!   !Need to test!
             self.file_track, self.file_state1 = tf.pnap_prepare_time(
                 self.file_track, self.file_state1)
             self.file_track, self.file_state1, self.file_state2, self.file_obs = inf.pnap_prepare_data(
@@ -123,6 +116,7 @@ class StartClass(object):
         else:
             print('input - error name of protocol')
             return 0
+        
         if self.prot == 1:
             self.num = 'num_track'
             self.ks_glo = self.take_parametr('qtyGlonInNav')
@@ -170,7 +164,9 @@ class StartClass(object):
 
     def take_parametr(self, parametr, sat_number='all', sat_type='0',
                       data_type='low'):
-        # Функция возвращает параметр из данных ППА или ПНАП
+        '''
+        Возвращает любой параметр из файла по ключам
+        '''
 
         if parametr == '0':
             return []
@@ -187,8 +183,9 @@ class StartClass(object):
         elif parametr == 'state2':
             return self.file_state2
 
-        elif parametr in self.file_track.columns and sat_type == '0':  # track both
-
+        elif parametr in self.file_track.columns and sat_type == '0':
+            # track both
+            
             if self.in_nav_correction:
                 # обрезает данные по навигации 1<=gdop<=10, dflg==1
                 frame0 = self.file_track
@@ -199,7 +196,8 @@ class StartClass(object):
 
             return self.file_track[parametr]
 
-        elif parametr in self.file_obs.columns and self.prot == 1:  # obs rinex
+        elif parametr in self.file_obs.columns and self.prot == 1:
+            # obs rinex
 
             if sat_number not in self.file_obs['numSat'] and sat_number != 'all':
                 print("there is no sat with this number")
@@ -209,7 +207,8 @@ class StartClass(object):
                 print("there is no sat with this type")
                 return np.zeros(1)
 
-            if sat_number == 'all':  # Значение параметра по всем спутникам
+            if sat_number == 'all':
+                # Значение параметра по всем спутникам
 
                 sats = self.sat_search(sat_type)
                 list1 = []
@@ -219,7 +218,7 @@ class StartClass(object):
                         (self.file_obs['numSat'] == sat_i) &
                         (self.file_obs['typeSat'] == self.dict_type[sat_type])]
                     list1.append(frame[parametr])
-                return list1  # можно добавить вывод длины списка чиста по приколу#
+                return list1  # можно добавить вывод длины списка 
 
             if data_type == 'full':
                 first_input = 0
@@ -242,7 +241,8 @@ class StartClass(object):
 
             return frame[parametr]
 
-        elif parametr in self.file_obs.columns:  # PNAP obs
+        elif parametr in self.file_obs.columns:  
+            # PNAP obs
 
             if sat_number == 'all':
                 arr1 = self.file_obs[self.file_obs['typeSat'] == self.dict_type[sat_type]]
@@ -255,7 +255,8 @@ class StartClass(object):
 
         if self.prot == 2:
 
-            if parametr in self.file_state1.columns:  # PNAP state1
+            if parametr in self.file_state1.columns:
+                # PNAP state1
                 '''
                 print('Данные из state1 были аппроксимированны')
                 if self.in_nav_correction: # обрезает данные по 1<gdop<10
@@ -270,7 +271,8 @@ class StartClass(object):
                     self.file_track['time'].to_numpy(),
                     frame2['time'].to_numpy())
 
-            elif parametr in self.file_state2.columns:  # PNAP state2
+            elif parametr in self.file_state2.columns:
+                # PNAP state2
                 print('Данные из state2 были аппроксимированны')
                 return mf.approx_linar(
                     self.file_state2[parametr].to_numpy(),
@@ -286,21 +288,23 @@ class LogClass(StartClass):
     '''
     Класс обработки логов
     Содержит различные фукции для построения графиков для различных задач
-    Содержит типовые аргументы переменных
+    Содержит типовые аргументы функций
     sl_l - срез значений лога (графика) слева на n
     sl_r - срез значений лога (графика) справа на n
     data_corr - флаг коррекции данных по адекватности
     in_nav_corr - флаг коррекции данных по навигации
     xaxe - выбор типа оси Х для вывода графиков
+
+    Наследует класс загрузки параметров поэтому может обращаться к ним напрямую
     '''
 
     def distance(self, point_name, sl_l=0, sl_r=0, data_corr=False,
                  in_nav_corr=False, xaxe='num'):
-        # Функция для вывода графика расстояния от некой точки
         '''
-        Точка на вход подается списком длинной 3 или 6
-        (см.пример в шапке модуля functions)
+        Функция для вывода графика расстояния от некой точки
         '''
+        # Точка на вход подается списком длинной 3 или 6
+        # (см.пример в шапке модуля functions)
         if len(point_name) == 3:
             point_x = point_name[0]
             point_y = point_name[1]

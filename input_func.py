@@ -1,7 +1,11 @@
+'''
+ Модуль с функциями ввода и предобработки данных
+'''
 import numpy as np
 
 
-def input_xyz():  # Функция возращает данные имитатора в виде массива
+def input_xyz():
+    # Функция возращает данные имитатора в виде массива
     reading = open('IM-2/f_xyz.txt', 'r')
     writing = open('IM-2/f_xyz_.txt', 'w')
     i = 0
@@ -18,7 +22,8 @@ def input_xyz():  # Функция возращает данные имитат�
     return np.genfromtxt('IM-2/f_xyz_.txt')
 
 
-def input_blh():  # Функция возращает данные имитатора в виде массива
+def input_blh():
+    # Функция возращает данные имитатора в виде массива
     reading = open('IM-2/f_blh.txt', 'r')
     writing = open('IM-2/f_blh_.txt', 'w')
     i = 0
@@ -35,7 +40,8 @@ def input_blh():  # Функция возращает данные имитат�
     return np.genfromtxt('IM-2/f_blh_.txt')
 
 
-def input_frg():  # Функция возращает данные имитатора в виде массива
+def input_frg():
+    # Функция возращает данные имитатора в виде массива
     reading = open('IM-2/frg.txt', 'r')
     writing = open('IM-2/frg_.txt', 'w')
     for line in reading:
@@ -49,7 +55,8 @@ def input_frg():  # Функция возращает данные имитат�
     return np.genfromtxt('IM-2/frg_.txt')
 
 
-def input_frn():  # РЕДАКТИРОВАНИЕ ФАЙЛА ДЛЯ ЧИТАЕМОСТИ ПРОГРАММОЙ
+def input_frn():
+    # РЕДАКТИРОВАНИЕ ФАЙЛА ДЛЯ ЧИТАЕМОСТИ ПРОГРАММОЙ
     reading = open('IM-2/frn.txt', 'r')
     writing = open('IM-2/frn_.txt', 'w')
     for line in reading:
@@ -63,7 +70,8 @@ def input_frn():  # РЕДАКТИРОВАНИЕ ФАЙЛА ДЛЯ ЧИТАЕМ�
     return np.genfromtxt('IM-2/frn_.txt')
 
 
-def input_fvg():  # Функция возращает данные имитатора в виде массива
+def input_fvg():
+    # Функция возращает данные имитатора в виде массива
 
     reading = open('IM-2/fvg.txt', 'r')
     writing = open('IM-2/fvg_.txt', 'w')
@@ -78,7 +86,8 @@ def input_fvg():  # Функция возращает данные имитат�
     return np.genfromtxt('IM-2/fvg_.txt')
 
 
-def input_fvn():  # Функция возращает данные имитатора в виде массива
+def input_fvn():
+    # Функция возращает данные имитатора в виде массива
 
     reading = open('IM-2/fvn.txt', 'r')
     writing = open('IM-2/fvn_.txt', 'w')
@@ -93,7 +102,8 @@ def input_fvn():  # Функция возращает данные имитат�
     return np.genfromtxt('IM-2/fvn_.txt')
 
 
-def input_track_rinex():  # Функция возвращает массив навигационных параметров track ППА (rinex)
+def input_track_rinex():
+    # Функция возвращает массив навигационных параметров track ППА (rinex)
     reading = open('logs/rinex/track_0.txt', 'r')
     writing = open('logs/rinex/track.txt', 'w')
     u = 0
@@ -111,7 +121,8 @@ def input_track_rinex():  # Функция возвращает массив н�
     return np.genfromtxt('logs/rinex/track.txt')
 
 
-def correct_obs_rinex():  # Функция конвертации файла obs для последующей обработки
+def correct_obs_rinex():
+    # Функция конвертации файла obs для последующей обработки
     reading = open('logs/rinex/obs_0.txt', 'r')
     writing = open('logs/rinex/obs.txt', 'w')
 
@@ -147,7 +158,8 @@ def correct_obs_rinex():  # Функция конвертации файла obs
     writing.close()
 
 
-def input_kbti_nav(name=''):  # Функция возвращает массив данных КБТИ навигация
+def input_kbti_nav(name=''):
+    # Функция возвращает массив данных КБТИ навигация
     if name == '':
         name = 'logs/kbti/ППА_навигация.txt'
     reading = open(name, 'r')
@@ -164,7 +176,8 @@ def input_kbti_nav(name=''):  # Функция возвращает массив
     return np.genfromtxt(name+'_')
 
 
-def input_kbti_land(name=''):  # Функция возвращает массив данных КБТИ посадка
+def input_kbti_land(name=''):
+    # Функция возвращает массив данных КБТИ посадка
     if name == '':
         name = 'logs/kbti/ППА_посадка.txt'
     reading = open(name, 'r')
@@ -181,7 +194,8 @@ def input_kbti_land(name=''):  # Функция возвращает масси�
     return np.genfromtxt(name+'_')
 
 
-def input_kbti_et():  # Функция возвращает массив данных КБТИ эталон
+def input_kbti_et():
+    # Функция возвращает массив данных КБТИ эталон
 
     reading = open('logs/kbti/Эталон_КБТИ.txt', 'r')
     writing = open('logs/kbti/Эталон_КБТИ_.txt', 'w')
@@ -197,7 +211,8 @@ def input_kbti_et():  # Функция возвращает массив дан�
     return np.genfromtxt('logs/kbti/Эталон_КБТИ_.txt')
 
 
-def input_track_PNAP():  # Функция возвращает массив навигационных параметров track ПНАП
+def input_track_PNAP():
+    # Функция возвращает массив навигационных параметров track ПНАП
 
     reading = open('logs/pnap/track_0.txt', 'r')
     writing = open('logs/pnap/track.txt', 'w')
@@ -216,7 +231,8 @@ def input_track_PNAP():  # Функция возвращает массив на
     return np.genfromtxt('logs/pnap/track.txt')
 
 
-def input_state1():  # Функция возвращает массив навигационных параметров State1 ПНАП
+def input_state1():
+    # Функция возвращает массив навигационных параметров State1 ПНАП
 
     reading = open('logs/pnap/state1.txt', 'r')
     writing = open('logs/pnap/state1_.txt', 'w')
@@ -235,7 +251,8 @@ def input_state1():  # Функция возвращает массив нави
     return np.genfromtxt('logs/pnap/state1_.txt')
 
 
-def input_state2():  # Функция возвращает массив навигационных параметров State2 ПНАП
+def input_state2():
+    # Функция возвращает массив навигационных параметров State2 ПНАП
 
     reading = open('logs/pnap/state2.txt', 'r')
     writing = open('logs/pnap/state2_.txt', 'w')
@@ -254,7 +271,8 @@ def input_state2():  # Функция возвращает массив нави
     return np.genfromtxt('logs/pnap/state2_.txt')
 
 
-def input_obs_PNAP():  # Функция возвращает массив навигационных параметров obs ПНАП
+def input_obs_PNAP():
+    # Функция возвращает массив навигационных параметров obs ПНАП
 
     reading = open('logs/pnap/obs_0.txt', 'r')
     writing = open('logs/pnap/obs_0_.txt', 'w')
@@ -273,16 +291,22 @@ def input_obs_PNAP():  # Функция возвращает массив нав
     return np.genfromtxt('logs/pnap/obs_0_.txt')
 
 
-def init_array():  # Инициализация пустого ndarray
+def init_array():
+    # Инициализация пустого ndarray
     return np.zeros(1)
 
 
-def init_dict():  # Инициализация пустого dict
+def init_dict():
+    # Инициализация пустого dict
     return dict.fromkeys(['None'])
 
 
-def pnap_prepare_data(frame_track, frame_state1, frame_state2, frame_obs):  # Подготовка данных ПНАП для обработки
-    # Обрезает по началу навигации, и вырезает моменты перезапуска блоков (кроме файла obs_0)
+def pnap_prepare_data(frame_track, frame_state1, frame_state2, frame_obs):
+    '''
+    Подготовка данных ПНАП для обработки
+    Обрезает по началу навигации, и вырезает моменты
+    перезапуска блоков (кроме файла obs_0)
+    '''
     frame_obs = frame_obs[frame_obs['timeSat'] != 0]
 
     frame_s1 = frame_state1[frame_state1['gdop'] <= 50]
@@ -313,7 +337,7 @@ def pnap_prepare_data(frame_track, frame_state1, frame_state2, frame_obs):  # П
                 frame0 = frame_state1[frame_state1['time'] == t0]
                 end_index_st = int(frame0['num_state1_bnm'])
                 break
-            #t0 = i
+            # t0 = i
         else:
             t0 = i
 
@@ -348,8 +372,11 @@ def pnap_prepare_data(frame_track, frame_state1, frame_state2, frame_obs):  # П
                 frame_obs)
 
 
-def rinex_prepare_data(frame_track, frame_obs):  # Подготовка данных ППА для обработки
-    # Пока без обработки файла obs
+def rinex_prepare_data(frame_track, frame_obs):
+    '''
+    Подготовка данных ППА для обработки
+    Пока без обработки файла obs
+    '''
     frame0 = frame_track[frame_track['gdop'] >= 1]
     frame0 = frame0[frame0['gdop'] <= 10]
     frame0 = frame0[frame0['decisionFlag'] == 1]
@@ -358,12 +385,14 @@ def rinex_prepare_data(frame_track, frame_obs):  # Подготовка данн
     # print(st_index_tr,'start index track')
     frame_track = frame_track.iloc[st_index_tr:]
 
-    frame_track = frame_track[frame_track['decisionFlag'] <= 1]  # cut data by logic (dflag could be only 0\1)
+    # cut data by logic (dflag could be only 0\1)
+    frame_track = frame_track[frame_track['decisionFlag'] <= 1]
     frame_track = frame_track[frame_track['decisionFlag'] >= 0]
     return frame_track, frame_obs
 
 
 def command_input(word: str) -> str:
+    # Ввод команд с терминала
     command = input()
     if word == 'command':
         if command in ['1', '2', '3', '4', '5', '6', '7', '8']:
@@ -386,6 +415,7 @@ def command_input(word: str) -> str:
 
 
 def blh_input() -> list:
+    # Ввод координат с терминала
     print('Введите координаты точки\n'+'Широта=')
     B = input()
     print('Долгота=')
@@ -393,7 +423,8 @@ def blh_input() -> list:
     print('Высота=')
     H = input()
     if len(B) == 0 or len(L) == 0 or len(H) == 0:
-        print('Некорретный ввод координат (пустое значение)\n Попробуйте еще раз')
+        print('Некорретный ввод координат (пустое значение)\n'
+              ' Попробуйте еще раз')
         blh_input()
     try:
         B = float(B)
@@ -403,4 +434,3 @@ def blh_input() -> list:
         print('Только числа\n Попробуйте еще раз')
         blh_input()
     return B, L, H
-###
