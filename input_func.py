@@ -3,8 +3,12 @@
 '''
 import numpy as np
 
+from numpy import ndarray
+from typing import Dict, Tuple
+from pandas.core.frame import DataFrame
 
-def input_xyz():
+
+def input_xyz() -> ndarray:
     # Функция возращает данные имитатора в виде массива
     reading = open('IM-2/f_xyz.txt', 'r')
     writing = open('IM-2/f_xyz_.txt', 'w')
@@ -22,7 +26,7 @@ def input_xyz():
     return np.genfromtxt('IM-2/f_xyz_.txt')
 
 
-def input_blh():
+def input_blh() -> ndarray:
     # Функция возращает данные имитатора в виде массива
     reading = open('IM-2/f_blh.txt', 'r')
     writing = open('IM-2/f_blh_.txt', 'w')
@@ -40,7 +44,7 @@ def input_blh():
     return np.genfromtxt('IM-2/f_blh_.txt')
 
 
-def input_frg():
+def input_frg() -> ndarray:
     # Функция возращает данные имитатора в виде массива
     reading = open('IM-2/frg.txt', 'r')
     writing = open('IM-2/frg_.txt', 'w')
@@ -55,7 +59,7 @@ def input_frg():
     return np.genfromtxt('IM-2/frg_.txt')
 
 
-def input_frn():
+def input_frn() -> ndarray:
     # РЕДАКТИРОВАНИЕ ФАЙЛА ДЛЯ ЧИТАЕМОСТИ ПРОГРАММОЙ
     reading = open('IM-2/frn.txt', 'r')
     writing = open('IM-2/frn_.txt', 'w')
@@ -70,7 +74,7 @@ def input_frn():
     return np.genfromtxt('IM-2/frn_.txt')
 
 
-def input_fvg():
+def input_fvg() -> ndarray:
     # Функция возращает данные имитатора в виде массива
 
     reading = open('IM-2/fvg.txt', 'r')
@@ -86,7 +90,7 @@ def input_fvg():
     return np.genfromtxt('IM-2/fvg_.txt')
 
 
-def input_fvn():
+def input_fvn() -> ndarray:
     # Функция возращает данные имитатора в виде массива
 
     reading = open('IM-2/fvn.txt', 'r')
@@ -102,7 +106,7 @@ def input_fvn():
     return np.genfromtxt('IM-2/fvn_.txt')
 
 
-def input_track_rinex():
+def input_track_rinex() -> ndarray:
     # Функция возвращает массив навигационных параметров track ППА (rinex)
     reading = open('logs/rinex/track_0.txt', 'r')
     writing = open('logs/rinex/track.txt', 'w')
@@ -158,7 +162,7 @@ def correct_obs_rinex():
     writing.close()
 
 
-def input_kbti_nav(name=''):
+def input_kbti_nav(name: str='') -> ndarray:
     # Функция возвращает массив данных КБТИ навигация
     if name == '':
         name = 'logs/kbti/ППА_навигация.txt'
@@ -176,7 +180,7 @@ def input_kbti_nav(name=''):
     return np.genfromtxt(name+'_')
 
 
-def input_kbti_land(name=''):
+def input_kbti_land(name: str='') -> ndarray:
     # Функция возвращает массив данных КБТИ посадка
     if name == '':
         name = 'logs/kbti/ППА_посадка.txt'
@@ -194,7 +198,7 @@ def input_kbti_land(name=''):
     return np.genfromtxt(name+'_')
 
 
-def input_kbti_et():
+def input_kbti_et() -> ndarray:
     # Функция возвращает массив данных КБТИ эталон
 
     reading = open('logs/kbti/Эталон_КБТИ.txt', 'r')
@@ -211,7 +215,7 @@ def input_kbti_et():
     return np.genfromtxt('logs/kbti/Эталон_КБТИ_.txt')
 
 
-def input_track_PNAP():
+def input_track_PNAP() -> ndarray:
     # Функция возвращает массив навигационных параметров track ПНАП
 
     reading = open('logs/pnap/track_0.txt', 'r')
@@ -231,7 +235,7 @@ def input_track_PNAP():
     return np.genfromtxt('logs/pnap/track.txt')
 
 
-def input_state1():
+def input_state1() -> ndarray:
     # Функция возвращает массив навигационных параметров State1 ПНАП
 
     reading = open('logs/pnap/state1.txt', 'r')
@@ -251,7 +255,7 @@ def input_state1():
     return np.genfromtxt('logs/pnap/state1_.txt')
 
 
-def input_state2():
+def input_state2() -> ndarray:
     # Функция возвращает массив навигационных параметров State2 ПНАП
 
     reading = open('logs/pnap/state2.txt', 'r')
@@ -271,7 +275,7 @@ def input_state2():
     return np.genfromtxt('logs/pnap/state2_.txt')
 
 
-def input_obs_PNAP():
+def input_obs_PNAP() -> ndarray:
     # Функция возвращает массив навигационных параметров obs ПНАП
 
     reading = open('logs/pnap/obs_0.txt', 'r')
@@ -291,17 +295,19 @@ def input_obs_PNAP():
     return np.genfromtxt('logs/pnap/obs_0_.txt')
 
 
-def init_array():
+def init_array() -> ndarray:
     # Инициализация пустого ndarray
     return np.zeros(1)
 
 
-def init_dict():
+def init_dict() -> Dict:
     # Инициализация пустого dict
     return dict.fromkeys(['None'])
 
 
-def pnap_prepare_data(frame_track, frame_state1, frame_state2, frame_obs):
+def pnap_prepare_data(frame_track: DataFrame, frame_state1: DataFrame, 
+                      frame_state2: DataFrame, frame_obs: DataFrame
+                      ) -> Tuple[DataFrame]:
     '''
     Подготовка данных ПНАП для обработки
     Обрезает по началу навигации, и вырезает моменты
@@ -361,10 +367,10 @@ def pnap_prepare_data(frame_track, frame_state1, frame_state2, frame_obs):
     else:
         frame_tr = frame_track[frame_track['time'] == t0]
         end_index_tr = int(frame_tr['num_track_bnm'])
-        print("ATTENTION")
-        print("Y've got two(or more) inclusion on this log!")
-        print("Obs_0.txt was't correct, do not use this data")
-        print("TY FOR YR ATTENTION")
+        print("ATTENTION\n"
+              "Y've got two(or more) inclusion on this log!\n"
+              "Obs_0.txt was't correct, do not use this data\n"
+              "TY FOR YR ATTENTION")
         print(end_index_tr, end_index_st, 'end of track and state')
         return (frame_track.iloc[st_index_tr:end_index_tr],
                 frame_state1.iloc[st_index_st:end_index_st],
@@ -372,7 +378,7 @@ def pnap_prepare_data(frame_track, frame_state1, frame_state2, frame_obs):
                 frame_obs)
 
 
-def rinex_prepare_data(frame_track, frame_obs):
+def rinex_prepare_data(frame_track: DataFrame, frame_obs: DataFrame) -> Tuple[DataFrame]: 
     '''
     Подготовка данных ППА для обработки
     Пока без обработки файла obs
@@ -414,13 +420,13 @@ def command_input(word: str) -> str:
             command_input('diff')
 
 
-def blh_input() -> list:
+def blh_input() -> Tuple[float]:
     # Ввод координат с терминала
-    print('Введите координаты точки\n'+'Широта=')
+    print('Введите координаты точки\n' + 'Широта=')
     B = input()
-    print('Долгота=')
+    print('Долгота =')
     L = input()
-    print('Высота=')
+    print('Высота =')
     H = input()
     if len(B) == 0 or len(L) == 0 or len(H) == 0:
         print('Некорретный ввод координат (пустое значение)\n'

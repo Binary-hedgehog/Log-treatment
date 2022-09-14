@@ -8,8 +8,13 @@ import numpy as np
 import plotly.express as px
 from plotly.offline import plot
 
+from numpy import ndarray
+from typing import List, Dict, Tuple
+from pandas.core.frame import DataFrame
 
-def errors_in_file(b, l, h, name=''):
+
+def errors_in_file(b: ndarray, l: ndarray, 
+                   h: ndarray, name: str=''):
     '''
     Функция вывода ошибок, мат.ож и ско по координатам в файл
     аргумент фунции массивы ошибок по координатам и имя для имени файла
@@ -29,24 +34,23 @@ def errors_in_file(b, l, h, name=''):
         writing = open('errors.txt', 'w')
     else:
         writing = open(name, 'w')
-    writing.write('Ошибка по ШИРОТЕ (В,м)' + '\n')
-    writing.write('Математическое ожидание : ' + str(m1) + '\n')
-    writing.write('СКО : ' + str(s1) + '\n')
-    writing.write('Ошибка (95%) : ' + str(o1) + '\n')
-    writing.write('Ошибка по ДОЛГОТЕ (L,м)' + '\n')
-    writing.write('Математическое ожидание : ' + str(m2) + '\n')
-    writing.write('СКО : ' + str(s2) + '\n')
-    writing.write('Ошибка (95%) : ' + str(o2) + '\n')
-    writing.write('Ошибка по ВЫСОТЕ (H,м)' + '\n')
-    writing.write('Математическое ожидание : ' + str(m3) + '\n')
-    writing.write('СКО : ' + str(s3) + '\n')
-    writing.write('Ошибка (95%) : ' + str(o3) + '\n')
-
+    writing.write(f'Ошибка по ШИРОТЕ (В,м)\n'
+                  f'Математическое ожидание : {m1}\n'
+                  f'СКО : {s1}\n' 
+                  f'Ошибка (95%) : {o1}\n' 
+                  f'Ошибка по ДОЛГОТЕ (L,м)\n' 
+                  f'Математическое ожидание : {m2}\n'
+                  f'СКО : {s2}\n'
+                  f'Ошибка (95%) : {o2}\n' 
+                  f'Ошибка по ВЫСОТЕ (H,м)\n' 
+                  f'Математическое ожидание : {m3}\n' 
+                  f'СКО : {s3}\n'
+                  f'Ошибка (95%) : {o3}\n')
     writing.close()
     return 1
 
 
-def errors_pr_in_file(psevdo_range):
+def errors_pr_in_file(psevdo_range: List[List[float]]):
     '''
     Функция вывода ошибок, мат.ож и ско по псевдодальностям в файл
     аргумент фунции массив ошибок по псевдодальностям
@@ -58,16 +62,17 @@ def errors_pr_in_file(psevdo_range):
         m = mat_ozh(i)
         s = sko(i)
         o = abs(m) + 2*s
-        writing.write('Ошибка по псевдодальности (В,м) __' + str(k) + '\n')
-        writing.write('Математическое ожидание : ' + str(m) + '\n')
-        writing.write('СКО - ' + str(s) + '\n')
-        writing.write('Ошибка (95%) - ' + str(o) + '\n\n')
+        writing.write(f'Ошибка по псевдодальности (В,м) : {k}\n'
+                      f'Математическое ожидание : {m}\n'
+                      f'СКО : {s}\n'
+                      f'Ошибка (95%) : {o}\n\n')
         k += 1
+        
     writing.close()
     return 1
 
 
-def show_diff(x):
+def show_diff(x: ndarray):
     # вывод граффика дифференциала параметра
     fig_0 = px.line(x=range(len(x)-1), y=np.diff(x), title='Дифференциал')
     # fig_0.show()
@@ -75,7 +80,7 @@ def show_diff(x):
     return 1
 
 
-def fast_plot(x, name=''):
+def fast_plot(x: ndarray, name: str=''):
     # Быстрый график на плотли экспресс
     fig_0 = px.line(x=range(len(x)), y=x, title='График '+name)
     fig_0.show()

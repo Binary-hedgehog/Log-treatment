@@ -3,8 +3,11 @@
 '''
 import numpy as np
 
+from numpy import ndarray
+from typing import List, Tuple
+from pandas.core.frame import DataFrame
 
-def time_cheking(t0, t):
+def time_cheking(t0: ndarray, t: ndarray) -> ndarray:
     # ПРИВОД К ОБЩЕМУ ВРЕМЕНИ ГЛОНАСС И GPS
     # в данный момент не применяется
     if abs(max(t0)-max(t)) >= 3600:
@@ -15,7 +18,7 @@ def time_cheking(t0, t):
     return t
 
 
-def time_chek(t0, t):
+def time_chek(t0: ndarray, t: ndarray) -> ndarray:
     '''
     ПРИВОД К ОБЩЕМУ ВРЕМЕНИ ГЛОНАСС И GPS (БОЛЕЕ СЛОЖНОЕ УСЛОВИЕ)
     t0 - время имитатора
@@ -50,7 +53,7 @@ def time_chek(t0, t):
         return t
 
 
-def time_remade(t):
+def time_remade(t: ndarray) -> ndarray:
     # Функция которая приводит все время в логе к одной системе UTC или UTC +3
     # она теперь не нужна
     for i in range(len(t)-1):
@@ -84,8 +87,11 @@ def kbti_matching_time(time1, time2):
     return x, y
 
 
-def sec_to_time(time) -> list:
+def sec_to_time(time: ndarray) -> List[str]:
     # Перевод секунд в часы, минуты, секунды
+    
+    
+    '''
     t = []
     for i in time:
         h = i//3600
@@ -93,10 +99,11 @@ def sec_to_time(time) -> list:
         s = i % 3600 % 60
         s = str(s)
         t.append(str(h)+'.'+str(m)+'.'+s[0:2])
-    return t
+    '''
+    return [f'{i//3600}.{i % 3660//60}.{i % 3600 % 60}' for i in time] # NEED TO TEST =)
 
 
-def search_time_swaps(arr):
+def search_time_swaps(arr: ndarray) -> List[int]: 
     '''
     Функция поиска скачков времени в файле
     На вход подается массив(список) времени и смотрится количество
@@ -113,7 +120,7 @@ def search_time_swaps(arr):
     return L
 
 
-def pnap_prepare_time(frame_track, frame_state1):
+def pnap_prepare_time(frame_track: DataFrame, frame_state1: DataFrame) -> Tuple[DataFrame]:
     '''
     ! без state2 и obs
 
@@ -237,7 +244,7 @@ def pnap_prepare_time(frame_track, frame_state1):
     return frame_track, frame_state1
 
 
-def rinex_prepare_time(frame_track, frame_obs):
+def rinex_prepare_time(frame_track: DataFrame, frame_obs: DataFrame) -> Tuple[DataFrame]: 
     # Функция которая приводит все время в логе к одной системе UTC или UTC +3
 
     if 0 in set(frame_track['time_type']) and 3 in set(frame_track['time_type']):

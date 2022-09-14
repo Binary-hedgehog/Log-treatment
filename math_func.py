@@ -6,6 +6,10 @@ from math import atan, pi, sin, cos, sqrt, acos, acosh, asinh, cosh, sinh
 
 import numpy as np
 
+from numpy import ndarray
+from typing import List, Tuple
+
+
 # ИСХОДНЫЕ ДАННЫЕ ДЛЯ WGS-84
 c_speed = 299792458  # СКОРОСТЬ СВЕТЫ
 eks = 0.00669437999014
@@ -32,7 +36,9 @@ syr_hmeimim_point = [35.41371890952971, 35.94863134703012, 48,
                      4212867.908991824, 3055060.628206721, 3675398.247658029]
 
 
-def spline(x0, x1, x2, x3, x4, y0, y1, y2, y3, y4, x):
+def spline(x0: float, x1: float, x2: float, x3: float, x4: float, 
+           y0: float, y1: float, y2: float, y3: float, y4: float, 
+           x: float) -> float: 
     # ИНТЕРПОЛЯЦИЯ КУБИЧЕСКИМ СПЛАЙНОМ
 
     a0 = y0
@@ -72,22 +78,22 @@ def spline(x0, x1, x2, x3, x4, y0, y1, y2, y3, y4, x):
     return y
 
 
-def linar(x0, x1, y0, y1, x):
+def linar(x0: float, x1: float, y0: float, y1: float, x: float) -> float:
     # ЛИНЕЙНАЯ ИНТЕРПОЛЯЦИЯ
     return y0 + (x-x0)*(y1-y0)/(x1-x0)
 
 
-def N1(B):
+def N1(B: float) -> float:
     # КРИВИЗНА ПЕРВОГО ВЕРТИКАЛА
     return a / ((1 - eks * np.sin(B)**2)**(1/2))
 
 
-def atan_deg(x):
+def atan_deg(x: float) -> float:
     # ФУНКЦИЯ ВЫВОДА АРКТАНГЕНС В ГРАДУСАХ
     return atan(x) * 180 / pi
 
 
-def xyz_blh(x, y, z):
+def xyz_blh(x: ndarray, y: ndarray, z: ndarray) -> Tuple[ndarray]:
     '''
     Функция преобразования геоцентрических координат в геодезические
     (иттеративаная)
@@ -106,7 +112,7 @@ def xyz_blh(x, y, z):
     return b, L, h
 
 
-def blh_xyz(B, L, H):
+def blh_xyz(B: ndarray, L: ndarray, H: ndarray) -> Tuple[ndarray]:
     '''
     Функция преобразования геодезических координат в геоцентрические
     Данные на вход в градусах
@@ -119,30 +125,27 @@ def blh_xyz(B, L, H):
     return x, y, z
 
 
-def mat_ozh(x) -> float:
+def mat_ozh(x: ndarray) -> float:
     # МАТЕМАТИЧЕСКОЕ ОЖИДАНИЕ ДЛЯ МАССИВОВ ndarray
     return sum(x) / len(x)
 
 
-def disp(x) -> float:
+def disp(x: ndarray) -> float:
     # ДИСПЕРИСИЯ ДЛЯ МАССИВОВ ndarray
     return mat_ozh((x - mat_ozh(x))**2)
 
 
-def sko(x) -> float:
+def sko(x: ndarray) -> float: 
     # СКО ДЛЯ МАССИВОВ ndarray
     return sqrt(disp(x))
 
 
-def mat_ozh_list(x: list) -> float:
+def mat_ozh_list(x: List[float]) -> float:
     # МАТЕМАТИЧЕСКОЕ ОЖИДАНИЕ ДЛЯ СПИСКОВ list
-    m = 0
-    for i in x:
-        m = m + i
-    return m/len(x)
+    return sum(x) / len(x)
 
 
-def disp_list(x: list) -> float:
+def disp_list(x: List[float]) -> float:
     # ДИСПЕРИСИЯ ДЛЯ СПИСКОВ list
     d = 0
     for i in x:
@@ -150,16 +153,16 @@ def disp_list(x: list) -> float:
     return d / len(x)
 
 
-def sko_list(x: list) -> float:
+def sko_list(x: List[float]) -> float:
     # СКО ДЛЯ СПИСКОВ list
     return sqrt(disp_list(x))
 
 
-def oshibka(x, e=2):
+def oshibka(x: ndarray, e: int=2) -> float:
     # Рассчет ошибки m + 2 (3) сигма
-    o = abs(mat_ozh(x)) + abs(sko(x)*e)
-    print(mat_ozh(x), '-- математическое ожидание')
-    print(sko(x), '-- СКО')
+    osh = abs(mat_ozh(x)) + abs(sko(x)*e)
+    print(f'{mat_ozh(x)} -- математическое ожидание\n'
+          f'{sko(x)} -- СКО')
     if e == 2:
         a = ' 95%'
     elif e == 3:
@@ -167,11 +170,11 @@ def oshibka(x, e=2):
     else:
         print('incorrect input "e"')
         return 0
-    print(o, '-- ошибка' + a)
-    return o
+    print(f'{osh} -- ошибка {a}')
+    return osh
 
 
-def sign(x):
+def sign(x: float) -> int:
     # ОПРЕДЕЛЕНИЕ ЗНАКА ЧИСЛА
     if x > 0:
         return 1
@@ -181,19 +184,19 @@ def sign(x):
         return 0
 
 
-def sr_kv(x, y, z):
+def sr_kv(x: float, y: float, z: float) -> float:
     # КОРЕНЬ СУММЫ КВАДРАТОВ
     return sqrt(x**2 + y**2 + z**2)
 
 
-def kub(a, b, c, d):
+def kub(a: float, b: float, c: float, d: float) -> Tuple[float]:
     '''
     НАХОЖДЕНИЕ КОРНЕЙ УРАВНЕНИЯ 3Й СТЕПЕНИ
     РЕШЕНИЕ МЕТОДОМ ВИЕТО-КАРДАНО
     '''
-    a_1 = b/a
-    b_1 = c/a
-    c_1 = d/a
+    a_1 = b / a
+    b_1 = c / a
+    c_1 = d / a
 
     q = (a_1**2 - 3 * b_1) / 9
     r = (2 * a_1**3 - 9 * a_1*b_1 + 27 * c_1) / 54
@@ -208,7 +211,6 @@ def kub(a, b, c, d):
         return x
 
     elif r**2 == q**3:
-
         x_1 = -2 * r**(1/3) - a_1 / 3
         x_2 = r**(1/3) - a_1 / 3
         return x_1, x_2
@@ -221,7 +223,9 @@ def kub(a, b, c, d):
         return x_1, x_2, x_3
 
 
-def spline_v3(x0, x1, x2, x3, x4, y0, y1, y2, y3, y4, x):
+def spline_v3(x0: float, x1: float, x2: float, x3: float, x4: float, 
+              y0: float, y1: float, y2: float, y3: float, y4: float, 
+              x: float) -> float:
     # Cплайн интерполяция
 
     a1 = y0
@@ -263,22 +267,23 @@ def spline_v3(x0, x1, x2, x3, x4, y0, y1, y2, y3, y4, x):
     return y
 
 
-def koef_glon():
+def koef_glon() -> float: 
     # Коэффициент для ГЛОНАСС СТ
     return 1e6 / (2048*511) * 1e-9 * c_speed
 
 
-def koef_gps():
+def koef_gps() -> float: 
     # Коэффициент для GPS
     return 1e6 / (1023*512) * 1e-9 * c_speed
 
 
-def koef_vt():
+def koef_vt() -> float: 
     # Коэффициент для ГЛОНАСС ВТ
     return 1e6 / (5110*256) * 1e-9 * c_speed
 
 
-def approx(vvod, time, time0, F0="0"):
+def approx(vvod: ndarray, time: ndarray, 
+           time0: ndarray, F0="0") -> ndarray:
     '''
     ФУНКЦИЯ АППРОКСИМАЦИИ ВХОДНЫХ ДАННЫХ (вообще-то это интерполяция...)
     vvod - координаты имитатора!
@@ -321,7 +326,8 @@ def approx(vvod, time, time0, F0="0"):
     return vivod
 
 
-def approx_linar(vvod, time, time0):
+def approx_linar(vvod: ndarray, time: ndarray, 
+                 time0: ndarray) -> ndarray:
     '''
     ФУНКЦИЯ АППРОКСИМАЦИИ ВХОДНЫХ ДАННЫХ Линейной аппроксимацией
     vvod - координаты имитатора!
@@ -359,7 +365,9 @@ def approx_linar(vvod, time, time0):
     return vivod
 
 
-def psevdorange(sat_range, time, time0, time_track, T0):
+def psevdorange(sat_range: ndarray, time: ndarray, 
+                time0: ndarray, time_track: ndarray, 
+                T0: ndarray) -> ndarray:
     # ФУНКЦИЯ АППРОКСИМАЦИИ ДАЛЬНОСТЕЙ ИМИТАТОРА, И ВЫЧИТАНИЕ clock_drift (T0)
 
     vivod = np.zeros_like(time)
@@ -395,7 +403,9 @@ def psevdorange(sat_range, time, time0, time_track, T0):
     return vivod
 
 
-def approx3(vvod1, vvod2, vvod3, time, time0):
+def approx3(vvod1: ndarray, vvod2: ndarray, 
+            vvod3: ndarray, time: ndarray, 
+            time0: ndarray) -> Tuple[ndarray]:
     '''
     ФУНКЦИЯ АППРОКСИМАЦИИ ВХОДНЫХ ДАННЫХ ДЛЯ ТРЕХ ЭЛЕМЕНТОВ
     vvod1,2,3 - координаты имитатора!
@@ -447,7 +457,7 @@ def approx3(vvod1, vvod2, vvod3, time, time0):
     return vivod1, vivod2, vivod3
 
 
-def lla2matrixT(lat, lon):
+def lla2matrixT(lat: ndarray, lon: ndarray) -> ndarray:
     # Матричные игры для функции lla2xyz
     T = np.zeros((3, 3))
     T[0][0] = -np.sin(lat) * np.cos(lon)
@@ -462,7 +472,8 @@ def lla2matrixT(lat, lon):
     return T
 
 
-def lla2xyz(vx, vy, vz, lat, lon):
+def lla2xyz(vx: ndarray, vy: ndarray, vz: ndarray, 
+            lat: ndarray, lon: ndarray) -> ndarray:
     # ПЕРЕВОД СКОРОСТЕЙ ИЗ XYZ B BLH
     lat = lat * pi / 180
     lon = lon * pi / 180
@@ -474,7 +485,9 @@ def lla2xyz(vx, vy, vz, lat, lon):
     return vlla
 
 
-def lla2xyz_mas(vx, vy, vz, lat, lon):
+def lla2xyz_mas(vx: ndarray, vy: ndarray, 
+                vz: ndarray, lat: ndarray, 
+                lon: ndarray) -> Tuple[ndarray]:
     # ПЕРЕВОД СКОРОСТЕЙ ИЗ XYZ B BLH МАССИВОМ ndarray
 
     vb = np.zeros_like(vx)
@@ -489,13 +502,12 @@ def lla2xyz_mas(vx, vy, vz, lat, lon):
     return vb, vl, vh
 
 
-def exp_moving_average(x, prev, alf=0.5):
+def exp_moving_average(x, prev, alf: float=0.5):
     # функция скользящего среднего
-    ema = alf*x + (1-alf)*prev
-    return ema
+    return alf*x + (1-alf)*prev
 
 
-def e_m_a(x, alf=0.1):
+def e_m_a(x: ndarray, alf: float=0.1):
     # скользящее среднее над массивом
     a = x[0]
     for i in range(1, len(x)):
@@ -525,7 +537,7 @@ def extrop_coor_with_vel(coor, vel, dt=1):
     return proection
 
 
-def l_shift(x, n):
+def l_shift(x: ndarray, n: int) -> ndarray:
     # Сдвиг массива влево, на Н
     y = np.zeros_like(x)
     for i in range(len(x)):
@@ -536,7 +548,7 @@ def l_shift(x, n):
     return y
 
 
-def r_shift(x, n):
+def r_shift(x: ndarray, n: int) -> ndarray:
     # Сдвиг массива вправо, на Н
     y = np.zeros_like(x)
     for i in range(len(x)):
@@ -547,7 +559,8 @@ def r_shift(x, n):
     return y
 
 
-def angle_between(x0, y0, z0, x1, y1, z1):
+def angle_between(x0: float, y0: float, z0: float, x1: float, 
+                  y1: float, z1: float) -> float:
     '''
     Угол между двумя точками в пространтсве
     На вход градусы, на выход градусы
@@ -560,6 +573,6 @@ def angle_between(x0, y0, z0, x1, y1, z1):
     return angle * 180 / pi
 
 
-def deg_conv(deg_c, min_c, sec_c) -> float:
+def deg_conv(deg_c: float, min_c: float, sec_c: float) -> float:
     # Конвертирование градусов в десятичный формат
     return deg_c + min_c/60 + sec_c/3600
